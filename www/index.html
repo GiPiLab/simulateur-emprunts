@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="jqmobile/jquery.mobile-1.4.5.min.css">
+		<script src="jquery-2.1.4.min.js"></script>
+		<script src="jqmobile/jquery.mobile-1.4.5.min.js"></script>
+		<script src="jqueryvalidation/jquery.validate.min.js"></script>
+		<script src="jqueryvalidation/additional-methods-thib.js"></script>
+		<script src="jqueryvalidation/localization/messages_fr-thib.js"></script>
+		<script src="decimal.min.js"></script>
+		<script src="emprunt.js"></script>
+
+
+		<style>
+			label.error {
+				color: red;
+				font-size: 10pt;
+				font-weight: bold;
+				margin-top: 0.0em;
+				width: 100%;
+				/*display:inline-block;
+				margin-left:0;
+				float: none;*/
+			}
+		</style>
+
+		<script type="text/javascript">
+
+			Decimal.config({format:{decimalSeparator:','}});
+
+
+
+
+
+function computeMissing()
+{
+	if(!validateFormEmprunt())
+	{
+		return;
+	}
+	var capital=new Decimal($('#input-capital').val());
+	var taux=new Decimal($('#input-taux').val()).dividedBy(100);
+	var duree=new Decimal($('#input-duree').val());
+	var periodicite=new Decimal($('#select-periodicite').val());
+	$('#resultatEcheanceConstante').html("<b>Valeur de l'échéance pour un emprunt de "+capital.toFormat(2,Decimal.ROUND_HALF_EVEN)+"€ à "+taux.times(100).toString()+"% pendant "+formatDureeEmprunt(duree,periodicite)+" = "+calculeEcheanceConstante(capital,taux,duree,periodicite).toFormat(2,Decimal.ROUND_HALF_EVEN)+"€");	
+}
+
+
+
+function validateFormEmprunt()
+{
+	var validator=$( '#formEmprunt').validate({
+		rules: {
+			'input-capital': {
+				number:true,
+				min: 0.01,
+				require_exactly_from_group:[3,'.empruntdata']
+			},
+			'input-echeance':
+			{
+				number:true,
+				min: 0.01,
+				require_exactly_from_group:[3,'.empruntdata']
+			},
+			'input-taux':
+			{
+				number:true,
+				min:0,
+				require_exactly_from_group:[3,'.empruntdata']
+			},
+			'input-duree':
+			{
+				digits:true,
+				min:1,
+				max:1000,
+				require_exactly_from_group:[3,'.empruntdata']
+			}
+		},
+		errorPlacement: function( error, element) {
+			error.insertAfter( element.parent());
+		}
+	});
+	return validator.form();
+}
+		</script>
+
+
+	</head>
+
+	<body>
+		<div data-role="page" id="pageAccueil">
+			<div data-role="header">
+				<h1>Présentation</h1>
+
+			</div>
+
+			<div data-role="main" class="ui-content">
+
+
+      <div>
+	<p>Le simulateur d'emprunt conçu par le Laboratoire de Recherche pour le Développement Local répond aux attentes de tout candidat à l'emprunt, qu'il s'agisse d'une Collectivité territoriale, dans le cadre de ses besoins de financement à moyen et long terme ou de l'un de ses gestionnaires, pour ses besoins particuliers.</p>
+
+	<h2>Théorie</h2>
+
+	<p>En tant qu'objet, un emprunt peut être défini comme le cadre dans lequel s'inscrit indissociablement un ensemble de paramètres :</p>
+
+	<ul>
+	  <li>un besoin financier, exprimé par l'emprunteur et satisfait par un flux d'argent, la somme empruntée (ou capital), circulant, au moment voulu, entre un prêteur et l'emprunteur</li>
+
+	  <li>un taux, correspondant toujours à un pourcentage appliqué à la partie non remboursée de la somme empruntée pour former les intérêts. Les intérêts correspondent, dans ce schéma, à la valeur de transaction de l'argent, en sa qualité de matière première négociée, en contrepartie du besoin financier exprimé par l'emprunteur</li>
+
+	  <li>une durée, au cours de laquelle le flux ayant satisfait le besoin d'origine est inversé, pour passer du sens prêteur -- emprunteur constaté lors de la satisfaction du besoin financier, au sens emprunteur -- prêteur</li>
+
+	  <li>une périodicité, ou structure temporelle de la durée, permettant de répartir et, corrélativement, de quantifier, le flux dans son sens emprunteur -- prêteur : les échéances ou termes</li>
+
+	  <li>une ou plusieurs échéances, transcription la plus apparente de l'existence d'un emprunt, permettant de rembourser la somme empruntée (ou « amortissement du capital ») et d'en payer le prix convenu (les intérêts). Noter que l'amortissement du capital peut être intégralement dissocié du paiement des intérêts.</li>
+	</ul>
+
+	<p>Chaque paramètre ainsi défini peut connaître, à tout moment, une variation d'amplitude dont les limites sont imposées par le paramètre lui-même (un taux ne saurait être négatif…).</p>
+
+	<p>L'acte d'emprunt résulte du triptyque :</p>
+
+	<ol>
+	  <li>émergence d'un besoin à satisfaire par un flux financier nouveau</li>
+
+	  <li>recherche des réponses les mieux adaptées</li>
+
+	  <li>formulation du choix</li>
+	</ol>
+
+	<h2>Pratique</h2>
+
+	<p>Le simulateur d'emprunts conçu par le Laboratoire de Recherche pour le Développement Local assiste le candidat emprunteur dès la phase de recherche.</p>
+
+	<p>D'une utilisation simple et intuitive, il s'appuie sur le principe du « calcul de l'inconnue ». Le simulateur dispose également d'un « élargisseur de champ ». Cet outil offre à l'utilisateur diverses variantes, proches de la réponse attendue et susceptibles de compléter utilement sa réflexion.</p>
+
+	<p>Le simulateur permet :</p>
+
+	<ul>
+	  <li>d'éclairer l'emprunteur sur les conséquences induites par ses objectifs :
+
+	    <ul>
+	      <li>« j'ai besoin de telle somme »</li>
+
+	      <li>« je ne veux pas m'endetter sur plus de tant d'années »</li>
+
+	      <li>« je ne souhaite pas que mes remboursements périodiques dépassent telle somme »</li>
+
+	      <li>« …</li>
+	    </ul>
+	  </li>
+
+	  <li>de simuler diverses situations pour élargir le champ des réponses possibles :
+
+	    <ul>
+	      <li>« si je rembourse telle somme pendant telle durée, combien puis-je emprunter ? »</li>
+
+	      <li>« pour que je puisse emprunter cette somme, sur quelle durée dois-je m'endetter ? »</li>
+
+	      <li>« quel sera le taux de mon emprunt si je limite les échéances à telle somme ? »</li>
+
+	      <li>« à combien s'élèvent mes échéances si je réduis la durée de mon emprunt ? »</li>
+
+	      <li>« quelle somme supplémentaire puis-je emprunter si j'allonge la durée de mon emprunt ? »</li>
+
+	      <li>« …</li>
+	    </ul>
+	  </li>
+
+	  <li>d'affiner les prévisions et de les recentrer sur telle limite en modulant les paramètres,</li>
+
+	  <li>d'élargir le champ de réflexion du candidat emprunteur à d'autres types de profil, proches de ses préoccupations.</li>
+	</ul>
+
+	<p>Utiliser le simulateur allège le risque de choix inhérent à tout emprunt nouveau. La position de l'emprunteur lors des négociations avec le prêteur en est renforcée.</p>
+	
+	
+	<h2>Formulation mathématique</h2>
+	<p>Les formules mathématiques utilisées dans le simulateur sont accessibles au format pdf en suivant ce lien : <a href="fichiers/calcul_financier.pdf">formulation mathématique du simulateur d'emprunts</a>.</p>
+	
+      </div>
+
+			</div>
+
+			<div data-role="footer" data-id="foo1" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li><a href="#pageAccueil" data-transition="none" class='ui-btn-active ui-state-persist'>Présentation</a></li>
+						<li><a href="#pageEmprunt" data-transition="none" >Nouvel emprunt</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+
+		<div data-role="page" id="pageEmprunt">
+			<div data-role="header">
+				<h1>Nouvel emprunt</h1>
+			</div>
+
+			<div data-role="main" class="ui-content">
+
+				<form id="formEmprunt">
+
+					<div class="ui-field-contain">
+						<label for="input-capital">Capital :</label>
+						<input class="empruntdata" type="number" name="input-capital" data-mini="true" data-clear-btn="true" id="input-capital" min="0" step="0.01">
+					</div>
+					<div class="ui-field-contain">
+						<label for="input-echeance">Echéance :</label>
+						<input class="empruntdata" type="number" name="input-echeance" data-mini="true" data-clear-btn="true" id="input-echeance" min="0" step="0.01">
+					</div>
+					<div class="ui-field-contain">
+						<label for="input-taux">Taux annuel (en %) :</label>
+						<input class="empruntdata" type="number" name="input-taux"  data-mini="true" data-clear-btn="true" id="input-taux" min="0" step="0.00001">
+					</div>
+
+
+					<div class="ui-field-contain">
+						<label for="input-duree">Durée (en périodes) :</label>
+						<input class="empruntdata" type="number" name="input-duree"  data-mini="true" data-clear-btn="true" id="input-duree" min="0" max="1000" step="1">
+					</div>
+
+					<div class="ui-field-contain">
+							<label for="select-periodicite">Périodicité :</label>
+							<select name="select-periodicite" id="select-periodicite" data-mini="true" >
+								<option value="12" selected="selected">mensuelle</option>
+								<option value="4">trimestrielle</option>
+								<option value="2">semestrielle</option>
+								<option value="1">annuelle</option>
+							</select>
+					</div>
+
+					<input type="button" id="btncalculer" onclick="computeMissing();" name="btncalculer" value="Calculer la grandeur manquante">
+				</form>
+
+				<div class="ui-grid-a ui-responsive">
+					<div class="ui-block-a">
+						<h3 class="ui-bar ui-bar-a">Echéance constante</h3>
+						<div class="ui-body" id="resultatEcheanceConstante"></div>
+					</div>
+					<div class="ui-block-b">
+						<h3 class="ui-bar ui-bar-a">Capital constant</h3>
+						<div class="ui-body" id="resultatCapitalConstant"></div>
+					</div>
+				</div>
+
+
+
+
+			</div>
+
+			<div data-role="footer" data-id="foo1" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li><a href="#pageAccueil" data-transition="none">Présentation</a></li>
+						<li><a href="#pageEmprunt" data-transition="none" class='ui-btn-active ui-state-persist'>Nouvel emprunt</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</body>
+</html>
+
