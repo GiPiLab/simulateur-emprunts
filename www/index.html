@@ -11,164 +11,87 @@
 		<script src="jqueryvalidation/localization/messages_fr-thib.min.js"></script>
 		<script src="decimal.min.js"></script>
 		<script src="emprunt.js"></script>
+		<script src="compute.js"></script>
 
 		<style>
-			label.error {
-				color: gray;
-				font-size: 10pt;
-				font-weight: bold;
-				margin-top: 0.0em;
-				width: 100%;
-				/*display:inline-block;
-				margin-left:0;
-				float: none;*/
-			}
+label.error {
+	color: gray;
+	font-size: 10pt;
+	font-weight: bold;
+	margin-top: 0.0em;
+	width: 100%;
+}
+
+div.resultat{
+	text-align:center;
+	font-size:2em;
+	padding:1em;
+	font-weight:bold;
+}
 		</style>
 
 		<script type="text/javascript">
 
-			$(document).ready(function(){
-				Decimal.config({
-					precision:40,
-					rounding:Decimal.ROUND_HALF_EVEN,
-					format:
-					{
-						decimalSeparator:',',
-						groupSeparator:' ',
-						groupSize:3
-					}
-				});
+$(document).ready(function(){
+	Decimal.config({
+		precision:40,
+		rounding:Decimal.ROUND_HALF_EVEN,
+		format:
+		{
+			decimalSeparator:',',
+			groupSeparator:'&nbsp;',
+			groupSize:3
+		}
+	});
 
-				$('#formEmprunt').validate({
-					rules: {
-						'input-capital': {
-							number:true,
-							min: 0.01,
-							max :999999999999999//,
-					//		require_exactly_from_group:[3,'.empruntdata']
-						},
-						'input-echeance':
-						{
-							number:true,
-							min: 0.01,
-							max :999999999999999//,
-					//		require_exactly_from_group:[3,'.empruntdata']
-						},
-						'input-taux':
-						{
-							number:true,
-							min:0,
-							max :999999//,
-					//		require_exactly_from_group:[3,'.empruntdata']
-						},
-						'input-duree':
-						{
-							digits:true,
-							min:1,
-							max:9999//,
-					//		require_exactly_from_group:[3,'.empruntdata']
-						}
-					},
-					errorPlacement: function( error, element) {
-						error.insertAfter( element.parent());
-					},
-					submitHandler:function(form){
-						computeMissing();
+	currentEmprunt={
+		capital:null,
+		echeance:null,
+		taux:null,
+		duree:null,
+		periodicite:null
+	};
+	
 
-					}});
-			});
+	$('#formEmprunt').validate({
+		rules: {
+			'input-capital': {
+				number:true,
+				min: 0.01,
+				max :999999999999999//,
+				//		require_exactly_from_group:[3,'.empruntdata']
+			},
+			'input-echeance':
+			{
+				number:true,
+				min: 0.01,
+				max :999999999999999//,
+				//		require_exactly_from_group:[3,'.empruntdata']
+			},
+			'input-taux':
+			{
+				number:true,
+				min:0,
+				max :999999//,
+				//		require_exactly_from_group:[3,'.empruntdata']
+			},
+			'input-duree':
+			{
+				digits:true,
+				min:1,
+				max:9999//,
+				//		require_exactly_from_group:[3,'.empruntdata']
+			}
+		},
+		errorPlacement: function( error, element) {
+			error.insertAfter( element.parent());
+		},
+		submitHandler:function(form){
+			computeMissing();
 
-
-function computeMissing()
-{
-	var nbInputs=0;
-	var setCapital=false,setEcheance=false,setTaux=false,setDuree=false;
-
-
-	if($('#input-capital').val())
-	{
-		nbInputs++;
-		setCapital=true;
-	}
-	if($('#input-echeance').val())
-	{
-		nbInputs++;
-		setEcheance=true;
-	}
-	if($('#input-taux').val())
-	{
-		nbInputs++;
-		setTaux=true;
-	}
-	if($('#input-duree').val())
-	{
-		nbInputs++;
-		setDuree=true;
-	}
-
-	if(nbInputs!=3)
-	{
-		alert("Remplissez exactement trois champs pour appuyez sur le bouton pour calculer la grandeur manquante");
-		return;
-	}
-
-	var periodicite=new Decimal($('#select-periodicite').val());
-
-
-	//Calcul de l'échéance
-	if(setCapital && setTaux && setDuree)
-	{
-			var capital=new Decimal($('#input-capital').val());
-			var taux=new Decimal($('#input-taux').val()).dividedBy(100);
-			var duree=new Decimal($('#input-duree').val());
-			var echeanceConstante=calculeEcheanceConstante(capital,taux,duree,periodicite);
-			$('#resultatEcheanceConstante').html("<b>Valeur de l'échéance pour un emprunt de "+capital.toFormat(2)+"€ à "+taux.times(100).toFormat()+"% pendant "+formatDureeEmprunt(duree,periodicite)+" = "+echeanceConstante.toFormat(2)+"€");	
-
-			var echeanceCapitalConstant=calculeEcheanceCapitalConstant(capital,taux,duree,periodicite);
-			$('#resultatCapitalConstant').html("<b>Valeur de la première échéance pour un emprunt de "+capital.toFormat(2)+"€ à "+taux.times(100).toFormat()+"% pendant "+formatDureeEmprunt(duree,periodicite)+" = "+echeanceCapitalConstant.toFormat(2)+"€");	
-
-	}
-	//Calcul de la durée
-	else if(setEcheance && setTaux && setCapital)
-	{
-		console.log("toto");
-			var capital=new Decimal($('#input-capital').val());
-			var taux=new Decimal($('#input-taux').val()).dividedBy(100);
-			var echeance=new Decimal($('#input-echeance').val());
-			var dureeEcheanceConstante=calculeDureeEcheanceConstante(capital,taux,echeance,periodicite);
-			
-			var res="<b>Durée d'un emprunt de "+capital.toFormat(2)+"€ à "+taux.times(100).toFormat()+"%, échéance "+periodiciteToString(periodicite)+" approchée de "+echeance.toFormat(2)+"€ = ";
-			
-			if(dureeEcheanceConstante.isFinite())
-				res+=formatDureeEmprunt(dureeEcheanceConstante,periodicite);
-			else
-				res+="pas de résultat";
-
-
-			$('#resultatEcheanceConstante').html(res);	
-			
-			var dureeCapitalConstant=calculeDureeCapitalConstant(capital,taux,echeance,periodicite);
-
-			res="<b>Durée d'un emprunt de "+capital.toFormat(2)+"€ à "+taux.times(100).toFormat()+"%, première échéance "+periodiciteToString(periodicite)+" approchée de "+echeance.toFormat(2)+"€ = ";
-			
-			if(dureeCapitalConstant.isFinite() && !dureeCapitalConstant.isNegative())
-				res+=formatDureeEmprunt(dureeCapitalConstant,periodicite);
-			else
-				res+="pas de résultat";
-
-			$('#resultatCapitalConstant').html(res);	
-
-//			var echeanceCapitalConstant=calculeEcheanceCapitalConstant(capital,taux,duree,periodicite);
-//			$('#resultatCapitalConstant').html("<b>Valeur de la première échéance pour un emprunt de "+capital.toFormat(2)+"€ à "+taux.times(100).toFormat()+"% pendant "+formatDureeEmprunt(duree,periodicite)+" = "+echeanceCapitalConstant.toFormat(2)+"€");	
-
-	}
-
-
-
-}
-
-</script>
-
+		}});
+}, false);
+		</script>
 	</head>
 
 	<body>
@@ -215,14 +138,18 @@ function computeMissing()
 
 				<div class="ui-grid-a ui-responsive">
 					<div class="ui-block-a">
-						<h3 class="ui-bar ui-bar-a">Echéance constante</h3>
+						<h3 class="ui-bar ui-bar-a" style='text-align:center'>Profil &laquo;&nbsp;échéance constante&nbsp;&raquo;</h3>
 						<div class="ui-body" id="resultatEcheanceConstante"></div>
 					</div>
 					<div class="ui-block-b">
-						<h3 class="ui-bar ui-bar-a">Capital constant</h3>
+						<h3 class="ui-bar ui-bar-a" style='text-align:center'>Profil &laquo;&nbsp;capital constant&nbsp;&raquo;</h3>
 						<div class="ui-body" id="resultatCapitalConstant"></div>
 					</div>
 				</div>
+
+				<button id="linkPageTableau" onclick="computeTables();" class="ui-btn">Tableaux d'amortissement</button>
+
+
 			</div>
 
 			<div data-role="footer" data-id="foo1" data-position="fixed">
@@ -234,8 +161,31 @@ function computeMissing()
 				</div>
 			</div>
 		</div>
-		<div data-role="page" id="pageAccueil">
+
+		<div data-role="page" id="pageTableaux">
 			<div data-role="header" data-position="fixed">
+				<h1>Tableaux d'amortissement</h1>
+			</div>
+
+			<div data-role="main" class="ui-content">
+				<div id="tableau">
+				Tableau
+				</div>
+			</div>
+			<div data-role="footer" data-id="foo1" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li><a href="#pageAccueil" data-transition="none">Présentation</a></li>
+						<li><a href="#pageEmprunt" data-transition="none">Nouvel emprunt</a></li>
+					</ul>
+				</div>
+			</div>
+			
+
+		</div>
+
+		<div data-role="page" id="pageAccueil" >
+			<div data-role="header"  data-position="fixed">
 				<h1>Présentation</h1>
 
 			</div>
