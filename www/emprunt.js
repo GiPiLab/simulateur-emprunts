@@ -129,7 +129,7 @@ function calculeTauxCapitalConstant(capital,echeance,duree,periodicite)
 }
 
 
-function getEmpruntDescription(capital,echeance,taux,duree,periodicite)
+function getEmpruntDescription(capital,taux,duree,periodicite)
 {
 	return "Emprunt de "+capital.toFormat(2)+"€ à "+taux.times(100).toFormat(3)+"% pendant "+formatDureeEmprunt(duree,periodicite);
 
@@ -139,13 +139,15 @@ function getEmpruntDescription(capital,echeance,taux,duree,periodicite)
 
 function periodiciteToString(periodicite)
 {
-	var per=periodicite.toString();
+	var per=periodicite.toNumber();
 	switch(per)
 	{
-		case "12":return "mensuelle";
-		case "4":return "trimestrielle";
-		case "2":return "semestrielle";
-		case "1":return "annuelle";
+		case 12:return "mensuelle";
+		case 4:return "trimestrielle";
+		case 2:return "semestrielle";
+		case 1:return "annuelle";
+		default:
+		       throw("Undefined periodicite");
 	}
 }
 
@@ -155,75 +157,197 @@ function formatDureeEmprunt(duree,periodicite)
 {
 	var text;
 	var dur=duree.toString();
-	var per=periodicite.toString();
+	var per=periodicite.toNumber();
 	switch(per)
 	{
-		case "12":text=dur+" mois";
+		case 12:text=dur+" mois";
 			break;
-		case "4":text=dur+" trimestre";
+		case 4:text=dur+" trimestre";
 		       if(duree>=2)
 			       text+="s";
 		       break;
-		case "2":text=dur+" semestre";
+		case 2:text=dur+" semestre";
 		       if(duree>=2)
 			       text+="s";
 		       break;
-		case "1":text=dur+" an";
+		case 1:text=dur+" an";
 		       if(duree>=2)
 			       text+="s";
 		       break;
 		default:
-		       console.log("undefined periodicite");
-		       return;
+		       throw("undefined periodicite");
 	}
 	return text;
 }
 
-function tableauAmortissementEcheanceConstante(capital,taux,echeance,duree,periodicite)
+function tableauAmortissementEcheanceConstante(capital,taux,duree,periodicite,breakpoint)
 {
-	var output="<table class='ui-responsive' id='tbl1' data-mode='columntoggle' data-role='table'><thead><tr><th>ieme</th><th>Date</<th><th>Echéance</th><th>Capital</th><th>Intérêts</th><th>Reste à payer</th></tr></thead><tbody>";
+	var echeance=calculeEcheanceConstante(capital,taux,duree,periodicite);
+	var rand=Math.floor(Math.random()*1000+1).toString();
+	var output="<table class='ui-responsive' id='tbl"+rand+"' data-role='table'><thead><tr><th>ieme</th><th>Date</<th><th style='text-align:right'>Echéance</th><th style='text-align:right'>Capital</th><th style='text-align:right'>Intérêts</th><th style='text-align:right'>Reste à payer</th></tr></thead><tbody>";
+
+	var tauxPer=taux.dividedBy(periodicite);
+	var ipe1=capital.times(tauxPer);
+	var ke1=echeance.minus(ipe1);
+	var crd1=capital.minus(ke1);
 
 	var sumKe=new Decimal(0);
 	var sumIpe=new Decimal(0);
 	var sumEch=new Decimal(0);
-	var ipe1=capital.times(taux.dividedBy(periodicite));
-	var ke1=echeance.minus(ipe1);
-	var crd1=capital.minus(ke1);
 
-	sumKe=sumKe.plus(ke1);
-	sumIpe=sumIpe.plus(ipe1);
-	sumEch=sumEch.plus(echeance);
-		output+="<tr><th>1</th><td>&nbsp;</td><td>"+echeance.toFormat(2)
-			+"</td><td>"+ke1.toFormat(2)+"</td><td>"+ipe1.toFormat(2)+
-			"</td><td>"+crd1.toFormat(2)+"</td></tr>";
+	var date=Date.today();
 
-	for(var i=2;i<=duree;i++)
+	
+	var per=periodicite.toNumber();
+
+	for(var i=1;i<=duree;i++)
 	{
-		var ipe=crd1.times(taux.dividedBy(periodicite));
+		if(crd1.isNegative())
+		{
+			crd1=crd1.absoluteValue();
+			if(i!=duree)
+				throw("Error with premature negative crd");
+		}
+
+	
+		switch(per)
+		{
+			case 12:
+				date=date.add({months:1});
+				break;
+			case 4:
+				date=date.add({months:3});
+				break;
+			case 2:
+				date=date.add({months:6});
+				break;
+			case 1:
+				date=date.add({months:12});
+				break;
+			default:
+				throw("Invalid periodicite");
+
+		}
+
+
+		if(i<breakpoint || i>=duree-2)
+		{
+		output+="<tr><th>"+i+"</th><td>"+date.toString('dd-MM-yyyy')+"</td><td style='text-align:right'>"+echeance.toFormat(2)
+			+"</td><td style='text-align:right'>"+ke1.toFormat(2)+"</td><td style='text-align:right'>"+ipe1.toFormat(2)+
+			"</td><td style='text-align:right'>"+crd1.toFormat(2)+"</td></tr>";
+		}
+		else if(i==breakpoint)
+		{
+			output+="<tr><th>...</th><td>...</td><td style='text-align:right'>...</td><td style='text-align:right'>...</td><td style='text-align:right'>...</td><td style='text-align:right'>...</td></tr>";
+		}
+
+
+		sumKe=sumKe.plus(ke1);
+		sumIpe=sumIpe.plus(ipe1);
+		sumEch=sumEch.plus(echeance);
+
+
+		var ipe=crd1.times(tauxPer);
 		var ke=echeance.minus(ipe);
 		var crd=crd1.minus(ke);
 
-		sumKe=sumKe.plus(ke);
-		sumIpe=sumIpe.plus(ipe);
-		sumEch=sumEch.plus(echeance);
-		
-		output+="<tr><th>"+i+"</th><td>&nbsp;</td><td>"+echeance.toFormat(2)
-			+"</td><td>"+ke.toFormat(2)+"</td><td>"+ipe.toFormat(2)+
-			"</td><td>"+crd.toFormat(2)+"</td></tr>";
 		ipe1=ipe;
 		ke1=ke;
 		crd1=crd;
 	}
+
+		output+="<tr><th>TOTAL</th><td>&nbsp;</td><td style='text-align:right'><b>"+sumEch.toFormat(2)
+			+"</b></td><td style='text-align:right'><b>"+sumKe.toFormat(2)+"</b></td><td style='text-align:right'><b>"+sumIpe.toFormat(2)+
+			"</b></td><td>&nbsp;</td></tr></tbody></table>";
+
+
+	output+="</tbody></table>";
+	return output;
+}
+
+function tableauAmortissementCapitalConstant(capital,taux,duree,periodicite,breakpoint)
+{
+	var echeance=calculeEcheanceCapitalConstant(capital,taux,duree,periodicite);
+	var rand=Math.floor(Math.random()*1000+1).toString();
+	var output="<table class='ui-responsive' id='tbl"+rand+"' data-role='table'><thead><tr><th>ieme</th><th>Date</<th><th style='text-align:right'>Echéance</th><th style='text-align:right'>Capital</th><th style='text-align:right'>Intérêts</th><th style='text-align:right'>Reste à payer</th></tr></thead><tbody>";
+
+	var tauxPer=taux.dividedBy(periodicite);
+	var ipe1=capital.times(tauxPer);
+	var ke1=capital.dividedBy(duree);
+	var crd1=capital.minus(ke1);
+
+
+	var sumKe=new Decimal(0);
+	var sumIpe=new Decimal(0);
+	var sumEch=new Decimal(0);
+
+	var date=Date.today();
+
+	
+	var per=periodicite.toNumber();
+
+	for(var i=1;i<=duree;i++)
+	{
+		if(crd1.isNegative())
+		{
+			crd1=crd1.absoluteValue();
+			if(i!=duree)
+				throw("Error with premature negative crd");
+		}
+
+	
+		switch(per)
+		{
+			case 12:
+				date=date.add({months:1});
+				break;
+			case 4:
+				date=date.add({months:3});
+				break;
+			case 2:
+				date=date.add({months:6});
+				break;
+			case 1:
+				date=date.add({months:12});
+				break;
+			default:
+				throw("Invalid periodicite");
+
+		}
+		if(i<breakpoint || i>=duree-2)
+		{
+			output+="<tr><th>"+i+"</th><td>"+date.toString('dd-MM-yyyy')+"</td><td style='text-align:right'>"+echeance.toFormat(2)
+				+"</td><td style='text-align:right'>"+ke1.toFormat(2)+"</td><td style='text-align:right'>"+ipe1.toFormat(2)+
+				"</td><td style='text-align:right'>"+crd1.toFormat(2)+"</td></tr>";
+		}
+		else if(i==breakpoint)
+		{
+			output+="<tr><th>...</th><td>...</td><td style='text-align:right'>...</td><td style='text-align:right'>...</td><td style='text-align:right'>...</td><td style='text-align:right'>...</td></tr>";
+		}
+
+
+		sumKe=sumKe.plus(ke1);
+		sumIpe=sumIpe.plus(ipe1);
+		sumEch=sumEch.plus(echeance);
+
+		var ipe=crd1.times(tauxPer);
+		var crd=crd1.minus(ke1);
+
+		ipe1=ipe;
+		crd1=crd;
+		echeance=ipe.plus(ke1);
+	}
+
+		output+="<tr><th>TOTAL</th><td>&nbsp;</td><td style='text-align:right'><b>"+sumEch.toFormat(2)
+			+"</b></td><td style='text-align:right'><b>"+sumKe.toFormat(2)+"</b></td><td style='text-align:right'><b>"+sumIpe.toFormat(2)+
+			"</b></td><td>&nbsp;</td></tr></tbody></table>";
+
+
 	output+="</tbody></table>";
 	return output;
 }
 
 
-function tableauAmortissementCapitalConstant(capital,taux,echeance,duree,periodicite)
-{
-	var output="<table><tr><th>ieme</th><th>Date</<th><th>Echéance</th><th>Capital</th><th>Intérêts</th><th>Reste à payer</th></tr>";
-
-}
 
 
 

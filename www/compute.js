@@ -1,15 +1,39 @@
 function computeTables()
 {
-	if(currentEmprunt.capital==null ||
-			currentEmprunt.echeance==null||
-			currentEmprunt.duree==null||
-			currentEmprunt.periodicite==null||
-			currentEmprunt.taux==null)
+	if(!currentEmpruntVariation1.isValid && !currentEmpruntVariation2.isValid)
+	{
+		alert("Calculez d'abord un emprunt");
 		return;
+	}
+	var output="";
 
+	if(currentEmpruntVariation1.isValid)
+	{
+		output+="<h3 class='ui-bar ui-bar-a'>"+getEmpruntDescription(currentEmpruntVariation1.capital,currentEmpruntVariation1.taux,currentEmpruntVariation1.duree,currentEmpruntVariation1.periodicite)+", profil &laquo;&nbsp;échéance constante&nbsp;&raquo;</h3>";
+
+		output+="<div class='ui-body'>"+tableauAmortissementEcheanceConstante(currentEmpruntVariation1.capital,currentEmpruntVariation1.taux,currentEmpruntVariation1.duree,currentEmpruntVariation1.periodicite,50)+"</div>";	
+		
+		output+="<h3 class='ui-bar ui-bar-a'>"+getEmpruntDescription(currentEmpruntVariation1.capital,currentEmpruntVariation1.taux,currentEmpruntVariation1.duree,currentEmpruntVariation1.periodicite)+", profil &laquo;&nbsp;capital constant&nbsp;&raquo;</h3>";
+
+		output+="<div class='ui-body'>"+tableauAmortissementCapitalConstant(currentEmpruntVariation1.capital,currentEmpruntVariation1.taux,currentEmpruntVariation1.duree,currentEmpruntVariation1.periodicite,50)+"</div>";	
+	}
+
+	if(currentEmpruntVariation2.isValid)
+	{
+		output+="<h2>Mais aussi...</h2>";
+		output+="<h3 class='ui-bar ui-bar-a'>"+getEmpruntDescription(currentEmpruntVariation2.capital,currentEmpruntVariation2.taux,currentEmpruntVariation2.duree,currentEmpruntVariation2.periodicite)+", profil &laquo;&nbsp;capital constant&nbsp;&raquo;</h3>";
+
+		output+="<div class='ui-body'>"+tableauAmortissementCapitalConstant(currentEmpruntVariation2.capital,currentEmpruntVariation2.taux,currentEmpruntVariation2.duree,currentEmpruntVariation2.periodicite,50)+"</div>";	
+		output+="<h3 class='ui-bar ui-bar-a'>"+getEmpruntDescription(currentEmpruntVariation2.capital,currentEmpruntVariation2.taux,currentEmpruntVariation2.duree,currentEmpruntVariation2.periodicite)+", profil &laquo;&nbsp;échéance constante&nbsp;&raquo;</h3>";
+
+		output+="<div class='ui-body'>"+tableauAmortissementEcheanceConstante(currentEmpruntVariation2.capital,currentEmpruntVariation2.taux,currentEmpruntVariation2.duree,currentEmpruntVariation2.periodicite,50)+"</div>";	
+
+	}
+		$("#tableau").html(output);
+
+	$("#tableau").trigger("create");
 	$.mobile.pageContainer.pagecontainer("change","#pageTableaux",{transition:"none"});
 
-	$("#tableau").html(tableauAmortissementEcheanceConstante(currentEmprunt.capital,currentEmprunt.taux,currentEmprunt.echeance,currentEmprunt.duree,currentEmprunt.periodicite));	
 
 }
 
@@ -19,11 +43,21 @@ function computeMissing()
 	var nbInputs=0;
 	var setCapital=false,setEcheance=false,setTaux=false,setDuree=false;
 
-	currentEmprunt.echeance=null;
-	currentEmprunt.capital=null;
-	currentEmprunt.duree=null;
-	currentEmprunt.taux=null;
-	currentEmprunt.periodicite=null;
+	currentEmpruntVariation1.echeance=null;
+	currentEmpruntVariation1.capital=null;
+	currentEmpruntVariation1.duree=null;
+	currentEmpruntVariation1.taux=null;
+	currentEmpruntVariation1.periodicite=null;
+	currentEmpruntVariation1.isValid=false;
+	
+	currentEmpruntVariation2.echeance=null;
+	currentEmpruntVariation2.capital=null;
+	currentEmpruntVariation2.duree=null;
+	currentEmpruntVariation2.taux=null;
+	currentEmpruntVariation2.periodicite=null;
+	currentEmpruntVariation2.isValid=false;
+
+	$("#linkPageTableau").prop('disabled',true);
 
 	if($('#input-capital').val())
 	{
@@ -48,12 +82,13 @@ function computeMissing()
 
 	if(nbInputs!=3)
 	{
-		alert("Remplissez exactement trois champs pour appuyez sur le bouton pour calculer la grandeur manquante");
+		alert("Remplissez exactement trois champs puis appuyez sur le bouton pour calculer la grandeur manquante");
 		return;
 	}
 
 	var periodicite=new Decimal($('#select-periodicite').val());
-	currentEmprunt.periodicite=periodicite;
+	currentEmpruntVariation1.periodicite=periodicite;
+	currentEmpruntVariation2.periodicite=periodicite;
 
 	//Calcul de l'échéance
 	if(setCapital && setTaux && setDuree)
@@ -63,10 +98,9 @@ function computeMissing()
 		var duree=new Decimal($('#input-duree').val());
 		var echeanceConstante=calculeEcheanceConstante(capital,taux,duree,periodicite);
 
-		currentEmprunt.capital=capital;
-		currentEmprunt.taux=taux;
-		currentEmprunt.duree=duree;
-
+		currentEmpruntVariation1.capital=capital;
+		currentEmpruntVariation1.taux=taux;
+		currentEmpruntVariation1.duree=duree;
 
 		var res="Valeur de l'échéance pour un emprunt de "+capital.toFormat(2)+"€ à "+taux.times(100).toFormat(3)+"% par an pendant "+formatDureeEmprunt(duree,periodicite)+" :";	
 
@@ -74,7 +108,9 @@ function computeMissing()
 		if(echeanceConstante.isFinite()&& !echeanceConstante.isNegative())
 		{
 			res+="<div class='resultat'>"+echeanceConstante.toFormat(2)+"€</div>";
-			currentEmprunt.echeance=echeanceConstante;
+			currentEmpruntVariation1.echeance=echeanceConstante;
+			currentEmpruntVariation1.isValid=true;
+			$("#linkPageTableau").prop('disabled',false);
 		}
 		else
 		{
@@ -89,6 +125,7 @@ function computeMissing()
 		if(echeanceCapitalConstant.isFinite() && !echeanceCapitalConstant.isNegative())
 		{
 			res+="<div class='resultat'>"+echeanceCapitalConstant.toFormat(2)+"€</div>";
+			$("#linkPageTableau").prop('disabled',false);
 		}
 		else
 		{
@@ -108,12 +145,26 @@ function computeMissing()
 			alert("L'echéance ne peut pas être supérieure au capital !");
 			return;
 		}
+		currentEmpruntVariation1.capital=capital;
+		currentEmpruntVariation1.taux=taux;
+		currentEmpruntVariation1.echeance=echeance;
+
+		currentEmpruntVariation2.capital=capital;
+		currentEmpruntVariation2.taux=taux;
+		currentEmpruntVariation2.echeance=echeance;
+		
 		var dureeEcheanceConstante=calculeDureeEcheanceConstante(capital,taux,echeance,periodicite);
 
 		var res="Durée d'un emprunt de "+capital.toFormat(2)+"€ à "+taux.times(100).toFormat(3)+"%, échéance "+periodiciteToString(periodicite)+" approchée de "+echeance.toFormat(2)+"€ :";
 
-		if(dureeEcheanceConstante.isFinite())
+		if(dureeEcheanceConstante.isFinite() && !dureeEcheanceConstante.isNegative())
+		{
 			res+="<div class='resultat'>"+formatDureeEmprunt(dureeEcheanceConstante,periodicite)+"</div>";
+			currentEmpruntVariation1.duree=dureeEcheanceConstante;
+			currentEmpruntVariation1.isValid=true;
+			$("#linkPageTableau").prop('disabled',false);
+
+		}
 		else
 			res+="<div class='resultat'>pas de résultat</div>";
 
@@ -125,7 +176,15 @@ function computeMissing()
 		res="Durée d'un emprunt de "+capital.toFormat(2)+"€ à "+taux.times(100).toFormat(3)+"%, première échéance "+periodiciteToString(periodicite)+" approchée de "+echeance.toFormat(2)+"€ :";
 
 		if(dureeCapitalConstant.isFinite() && !dureeCapitalConstant.isNegative())
+		{
 			res+="<div class='resultat'>"+formatDureeEmprunt(dureeCapitalConstant,periodicite)+"</div>";
+			if(!dureeCapitalConstant.equals(dureeEcheanceConstante))
+			{
+				currentEmpruntVariation2.duree=dureeCapitalConstant;
+				currentEmpruntVariation2.isValid=true;
+			}
+			$("#linkPageTableau").prop('disabled',false);
+		}
 		else
 			res+="<div class='resultat'>pas de résultat</div>";
 
@@ -142,6 +201,14 @@ function computeMissing()
 			alert("L'echéance ne peut pas être supérieure au capital !");
 			return;
 		}
+		currentEmpruntVariation1.capital=capital;
+		currentEmpruntVariation1.duree=duree;
+		currentEmpruntVariation1.echeance=echeance;
+
+		currentEmpruntVariation2.capital=capital;
+		currentEmpruntVariation2.duree=duree;
+		currentEmpruntVariation2.echeance=echeance;
+
 		var tauxEcheanceConstante=calculeTauxEcheanceConstante(capital,echeance,duree,periodicite);
 
 
@@ -151,6 +218,9 @@ function computeMissing()
 		if(tauxEcheanceConstante.isFinite() && !tauxEcheanceConstante.isNegative())
 		{
 			res+="<div class='resultat'>"+tauxEcheanceConstante.times(100).toFormat(3)+"%</div>";
+			currentEmpruntVariation1.taux=tauxEcheanceConstante;
+			currentEmpruntVariation1.isValid=true;
+			$("#linkPageTableau").prop('disabled',false);
 		}
 		else
 		{
@@ -166,6 +236,12 @@ function computeMissing()
 		if(tauxCapitalConstant.isFinite() && !tauxCapitalConstant.isNegative())
 		{
 			res+="<div class='resultat'>"+tauxCapitalConstant.times(100).toFormat(3)+"%</div>";
+			if(!tauxCapitalConstant.equals(tauxEcheanceConstante))
+			{
+				currentEmpruntVariation2.taux=tauxCapitalConstant;
+				currentEmpruntVariation2.isValid=true;
+			}
+			$("#linkPageTableau").prop('disabled',false);
 		}
 		else
 		{
@@ -180,6 +256,14 @@ function computeMissing()
 		var echeance=new Decimal($('#input-echeance').val());
 		var duree=new Decimal($('#input-duree').val());
 		var taux=new Decimal($('#input-taux').val()).dividedBy(100);
+		
+		currentEmpruntVariation1.taux=taux;
+		currentEmpruntVariation1.duree=duree;
+		currentEmpruntVariation1.echeance=echeance;
+
+		currentEmpruntVariation2.taux=taux;
+		currentEmpruntVariation2.duree=duree;
+		currentEmpruntVariation2.echeance=echeance;
 
 		var capitalEcheanceConstante=calculeCapitalEcheanceConstante(taux,echeance,duree,periodicite);
 
@@ -188,6 +272,10 @@ function computeMissing()
 		if(capitalEcheanceConstante.isFinite() && !capitalEcheanceConstante.isNegative())
 		{
 			res+="<div class='resultat'>"+capitalEcheanceConstante.toFormat(2)+"€</div>";
+			currentEmpruntVariation1.capital=capitalEcheanceConstante;
+			currentEmpruntVariation1.isValid=true;
+			$("#linkPageTableau").prop('disabled',false);
+
 		}
 		else
 		{
@@ -202,6 +290,13 @@ function computeMissing()
 		if(capitalCapitalConstant.isFinite() && !capitalCapitalConstant.isNegative())
 		{
 			res+="<div class='resultat'>"+capitalCapitalConstant.toFormat(2)+"€</div>";
+			
+			if(!capitalCapitalConstant.equals(capitalEcheanceConstante))
+			{
+				currentEmpruntVariation2.capital=capitalCapitalConstant;
+				currentEmpruntVariation2.isValid=true;
+				$("#linkPageTableau").prop('disabled',false);
+			}
 		}
 		else
 		{

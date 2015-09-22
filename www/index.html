@@ -4,6 +4,7 @@
 		<meta name="viewport" content="width=device-width,initial-scale=1">
 		<meta charset="utf-8">
 		<link rel="stylesheet" href="jqmobile/jquery.mobile-1.4.5.min.css">
+		<script src="date-fr-FR.min.js"></script>
 		<script src="jquery-2.1.4.min.js"></script>
 		<script src="jqmobile/jquery.mobile-1.4.5.min.js"></script>
 		<script src="jqueryvalidation/jquery.validate.min.js"></script>
@@ -44,12 +45,22 @@ $(document).ready(function(){
 		}
 	});
 
-	currentEmprunt={
+	currentEmpruntVariation1={
 		capital:null,
 		echeance:null,
 		taux:null,
 		duree:null,
-		periodicite:null
+		periodicite:null,
+		isValid:false
+	};
+	
+	currentEmpruntVariation2={
+		capital:null,
+		echeance:null,
+		taux:null,
+		duree:null,
+		periodicite:null,
+		isValid:false
 	};
 	
 
@@ -79,7 +90,7 @@ $(document).ready(function(){
 			{
 				digits:true,
 				min:1,
-				max:9999//,
+				max:1000//,
 				//		require_exactly_from_group:[3,'.empruntdata']
 			}
 		},
@@ -120,7 +131,7 @@ $(document).ready(function(){
 
 					<div class="ui-field-contain">
 						<label for="input-duree">Durée (en périodes) :</label>
-						<input class="empruntdata" type="number" name="input-duree" data-mini="true" data-clear-btn="true" id="input-duree" min="1" max="9999" step="1">
+						<input class="empruntdata" type="number" name="input-duree" data-mini="true" data-clear-btn="true" id="input-duree" min="1" max="1000" step="1">
 					</div>
 
 					<div class="ui-field-contain">
@@ -146,8 +157,8 @@ $(document).ready(function(){
 						<div class="ui-body" id="resultatCapitalConstant"></div>
 					</div>
 				</div>
+				<button id="linkPageTableau" disabled="disabled" onclick="computeTables();" class="ui-btn">Tableaux d'amortissement</button>
 
-				<button id="linkPageTableau" onclick="computeTables();" class="ui-btn">Tableaux d'amortissement</button>
 
 
 			</div>
@@ -169,7 +180,6 @@ $(document).ready(function(){
 
 			<div data-role="main" class="ui-content">
 				<div id="tableau">
-				Tableau
 				</div>
 			</div>
 			<div data-role="footer" data-id="foo1" data-position="fixed">
@@ -271,7 +281,7 @@ $(document).ready(function(){
 
 
 				<h2>Formulation mathématique</h2>
-				<p>Les formules mathématiques utilisées dans le simulateur sont accessibles au format pdf en suivant ce lien : <a href="fichiers/calcul_financier.pdf">formulation mathématique du simulateur d'emprunts</a>.</p>
+				<p>Les formules mathématiques utilisées dans le simulateur sont accessibles au format pdf en suivant ce lien : <a href="calcul_financier.pdf">formulation mathématique du simulateur d'emprunts</a>.</p>
 
 
 			</div>
