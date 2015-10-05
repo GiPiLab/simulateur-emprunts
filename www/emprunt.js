@@ -141,6 +141,59 @@ function getEmpruntDescription(capital,taux,duree,periodicite)
 }
 
 
+function formatEmpruntQuery(capital,taux,duree,echeance,periodicite)
+{
+	if(periodicite===null)
+	{
+		throw new Error("Invalid emprunt, need periodicite");
+	}
+
+	periodicite=new Decimal(periodicite);
+
+	if(capital==null && taux!==null && duree!==null && echeance!==null)
+	{
+		var taux=new Decimal(taux);
+		var echeance=new Decimal(echeance);
+		var out="<h1>Calcul du capital</h1><p>échéance approchée = "+echeance.toFormat(2)+"€";
+		out+=" ; taux annuel = "+taux.times(100).toFormat(3)+"%";
+		out+=" ; durée = "+formatDureeEmprunt(duree,periodicite)+"</p>";
+		return out;
+	}
+	else if(capital!==null && taux==null && duree!==null && echeance!==null)
+	{
+		var capital=new Decimal(capital);
+		var echeance=new Decimal(echeance);
+		var out="<h1>Calcul du taux</h1><p>échéance approchée = "+echeance.toFormat(2)+"€";
+		out+=" ; somme empruntée = "+capital.toFormat(2)+"€";
+		out+=" ; durée = "+formatDureeEmprunt(duree,periodicite)+"</p>";
+		return out;
+	}
+	else if(capital!==null && taux!==null && duree==null && echeance!==null)
+	{
+		var taux=new Decimal(taux);
+		var echeance=new Decimal(echeance);
+		var capital=new Decimal(capital);
+		var out="<h1>Calcul de la durée</h1><p>échéance approchée = "+echeance.toFormat(2)+"€";
+		out+=" ; somme empruntée = "+capital.toFormat(2)+"€";
+		out+=" ; taux annuel = "+taux.times(100).toFormat(3)+"% ; périodicité "+periodiciteToString(periodicite)+"</p>";
+		return out;
+	}
+	else if(capital!==null && taux!==null && duree!==null && echeance==null)
+	{
+		var capital=new Decimal(capital);
+		var taux=new Decimal(taux);
+		
+		var out="<h1>Calcul de l'échéance</h1><p>somme empruntée = "+capital.toFormat(2)+"€";
+		out+=" ; taux annuel = "+taux.times(100).toFormat(3)+"%";
+		out+=" ; durée = "+formatDureeEmprunt(duree,periodicite)+"</p>";
+		return out;
+	}
+	else
+	{
+		throw new Error("Invalid parameters");
+	}
+}
+
 
 function periodiciteToString(periodicite)
 {

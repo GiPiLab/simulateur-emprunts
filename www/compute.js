@@ -57,7 +57,15 @@ function computeMissing()
 	currentEmpruntVariation2.periodicite=null;
 	currentEmpruntVariation2.isValid=false;
 
+	currentEmpruntFormData.echeance=null;
+	currentEmpruntFormData.capital=null;
+	currentEmpruntFormData.duree=null;
+	currentEmpruntFormData.taux=null;
+	currentEmpruntFormData.periodicite=null;
+	currentEmpruntFormData.isValid=false;
+
 	$("#linkPageTableau").prop('disabled',true);
+	$("#saveEmprunt").prop('disabled',true);
 
 	if($('#input-capital').val())
 	{
@@ -89,6 +97,7 @@ function computeMissing()
 	var periodicite=new Decimal($('#select-periodicite').val());
 	currentEmpruntVariation1.periodicite=periodicite;
 	currentEmpruntVariation2.periodicite=periodicite;
+	currentEmpruntFormData.periodicite=periodicite;
 
 	//Calcul de l'échéance
 	if(setCapital && setTaux && setDuree)
@@ -101,6 +110,12 @@ function computeMissing()
 		currentEmpruntVariation1.capital=capital;
 		currentEmpruntVariation1.taux=taux;
 		currentEmpruntVariation1.duree=duree;
+		
+		currentEmpruntFormData.capital=capital;
+		currentEmpruntFormData.taux=taux;
+		currentEmpruntFormData.duree=duree;
+		currentEmpruntFormData.isValid=true;
+		$("#saveEmprunt").prop('disabled',false);
 
 		var res="Valeur de l'échéance pour un emprunt de "+capital.toFormat(2)+"€ à "+taux.times(100).toFormat(3)+"% par an pendant "+formatDureeEmprunt(duree,periodicite)+" :";	
 
@@ -111,6 +126,7 @@ function computeMissing()
 			currentEmpruntVariation1.echeance=echeanceConstante;
 			currentEmpruntVariation1.isValid=true;
 			$("#linkPageTableau").prop('disabled',false);
+			$("#saveEmprunt").prop('disabled',false);
 		}
 		else
 		{
@@ -148,6 +164,12 @@ function computeMissing()
 		currentEmpruntVariation1.capital=capital;
 		currentEmpruntVariation1.taux=taux;
 		currentEmpruntVariation1.echeance=echeance;
+		
+		currentEmpruntFormData.capital=capital;
+		currentEmpruntFormData.taux=taux;
+		currentEmpruntFormData.echeance=echeance;
+		currentEmpruntFormData.isValid=true;
+		$("#saveEmprunt").prop('disabled',false);
 
 		currentEmpruntVariation2.capital=capital;
 		currentEmpruntVariation2.taux=taux;
@@ -204,6 +226,12 @@ function computeMissing()
 		currentEmpruntVariation1.capital=capital;
 		currentEmpruntVariation1.duree=duree;
 		currentEmpruntVariation1.echeance=echeance;
+		
+		currentEmpruntFormData.capital=capital;
+		currentEmpruntFormData.duree=duree;
+		currentEmpruntFormData.echeance=echeance;
+		currentEmpruntFormData.isValid=true;
+		$("#saveEmprunt").prop('disabled',false);
 
 		currentEmpruntVariation2.capital=capital;
 		currentEmpruntVariation2.duree=duree;
@@ -260,6 +288,12 @@ function computeMissing()
 		currentEmpruntVariation1.taux=taux;
 		currentEmpruntVariation1.duree=duree;
 		currentEmpruntVariation1.echeance=echeance;
+		
+		currentEmpruntFormData.duree=duree;
+		currentEmpruntFormData.taux=taux;
+		currentEmpruntFormData.echeance=echeance;
+		currentEmpruntFormData.isValid=true;
+		$("#saveEmprunt").prop('disabled',false);
 
 		currentEmpruntVariation2.taux=taux;
 		currentEmpruntVariation2.duree=duree;
@@ -310,10 +344,5 @@ function computeMissing()
 	{
 		throw new Error("Erreur de determination de l'inconnue");		
 	}
-
-
-
-
-
 }
 
