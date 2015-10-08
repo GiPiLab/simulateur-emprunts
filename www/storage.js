@@ -7,7 +7,7 @@ function initDb()
 }
 
 //Returns the identifier of the saved emprunt
-function saveEmprunt(emp)
+function saveEmpruntToFavorite(emp)
 {	
 	if(localStorage.simulateurEmpruntslisteEmprunts)
 	{
@@ -50,7 +50,7 @@ function loadEmprunt(i)
 			$("#input-duree").val('');
 
 		if(emp.taux!=null)
-			$("#input-taux").val(emp.taux*100);
+			$("#input-taux").val(new Decimal(emp.taux).times(100));
 		else
 			$("#input-taux").val('');
 
