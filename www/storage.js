@@ -1,3 +1,5 @@
+"use strict";
+
 function initDb()
 {
 	if(typeof(Storage)==="undefined")
@@ -6,14 +8,22 @@ function initDb()
 	}
 }
 
-//Returns the identifier of the saved emprunt
 function saveEmpruntToFavorite(emp)
 {	
+	if(emp===undefined || emp===null)
+	{
+		throw new Error("undefined emprunt !");
+	}
+
+	if(emp.capital===undefined || emp.echeance===undefined || emp.duree===undefined|| emp.periodicite===undefined ||emp.taux===undefined)
+	{
+		throw new TypeError("Invalid object found instead of empruntData !");
+	}
+
 	if(localStorage.simulateurEmpruntslisteEmprunts)
 	{
 		var listEmp=JSON.parse(localStorage.getItem("simulateurEmpruntslisteEmprunts"));
 		listEmp.push(emp);
-		console.log(listEmp);
 		localStorage.setItem("simulateurEmpruntslisteEmprunts",JSON.stringify(listEmp));
 	}
 	else
@@ -24,37 +34,46 @@ function saveEmpruntToFavorite(emp)
 	
 	$("#listeEmprunts").html(listEmprunts());
 	$("#listeEmprunts").trigger("create");
+	alert("Emprunt enregistré en favori !");
 }
-
-
 
 function loadEmprunt(i)
 {
+	if(i===undefined)
+	{
+		throw new Error("undefined index to load");
+	}
 	var listEmp=JSON.parse(localStorage.getItem("simulateurEmpruntslisteEmprunts"));
 
 	if(i>=0 && i < listEmp.length)
 	{
 		var emp=listEmp[i];
-		if(emp.capital!=null)
+		if(emp.capital===undefined || emp.echeance===undefined || emp.duree===undefined|| emp.periodicite===undefined ||emp.taux===undefined)
+		{
+			throw new TypeError("Invalid object found instead of empruntData !");
+		}
+	
+		
+		if(emp.capital!==null)
 			$("#input-capital").val(emp.capital);
 		else
 			$("#input-capital").val('');
 
-		if(emp.echeance!=null)
+		if(emp.echeance!==null)
 			$("#input-echeance").val(emp.echeance);
 		else
 			$("#input-echeance").val('');
-		if(emp.duree!=null)
+		if(emp.duree!==null)
 			$("#input-duree").val(emp.duree);
 		else
 			$("#input-duree").val('');
 
-		if(emp.taux!=null)
+		if(emp.taux!==null)
 			$("#input-taux").val(new Decimal(emp.taux).times(100));
 		else
 			$("#input-taux").val('');
 
-		if(emp.periodicite!=null)
+		if(emp.periodicite!==null)
 		{
 			$("#select-periodicite").val(emp.periodicite);
 			//Do not refresh before creation
@@ -66,18 +85,31 @@ function loadEmprunt(i)
 	}
 	else
 	{
-		throw new Error("Invalid index");
+		throw new RangeError("Invalid index");
 	}
 }
 
 function removeEmprunt(i)
 {
+	if(i===undefined)
+	{
+		throw new Error("undefined index to remove");
+	}
 	var listEmp=JSON.parse(localStorage.getItem("simulateurEmpruntslisteEmprunts"));
 
 	if(i>=0 && i < listEmp.length)
 	{
+		var emp=listEmp[i];
+		if(emp.capital===undefined || emp.echeance===undefined || emp.duree===undefined|| emp.periodicite===undefined ||emp.taux===undefined)
+		{
+			throw new TypeError("Invalid object found instead of empruntData !");
+		}
 		listEmp.splice(i,1);
 		localStorage.setItem("simulateurEmpruntslisteEmprunts",JSON.stringify(listEmp));
+	}
+	else
+	{
+		throw new RangeError("Invalid index");
 	}
 }
 
@@ -90,10 +122,14 @@ function listEmprunts()
 	
 		out+="<ul data-role='listview' data-split-icon='delete'>";
 	
-		for(i=0;i<listEmp.length;i++)
+		for(var i=0;i<listEmp.length;i++)
 		{
 			var emp=listEmp[i];
-			var description=formatEmpruntQuery(emp.capital,emp.taux,emp.duree,emp.echeance,emp.periodicite);
+			if(emp.capital===undefined || emp.echeance===undefined || emp.duree===undefined|| emp.periodicite===undefined ||emp.taux===undefined)
+			{
+				throw new TypeError("Invalid object found instead of empruntData !");
+			}
+			var description=Emprunt.formatEmpruntQuery(emp.capital,emp.taux,emp.duree,emp.echeance,emp.periodicite);
 			out+="<li><a href='#' onclick='loadEmprunt("+i+");'>"+description+"</a><a href='#' onclick='removeEmprunt("+i+");$(\"#listeEmprunts\").html(listEmprunts());$(\"#listeEmprunts\").trigger(\"create\");'>Supprimer</a></li>";
 		}
 

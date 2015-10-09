@@ -43,6 +43,7 @@ div.resultat{
 	<body>
 		<script type="text/javascript">
 
+"use strict";
 //Global config
 Decimal.config({
 		precision:40,
@@ -55,49 +56,19 @@ Decimal.config({
 		}
 	});
 
+//Sealed global variables
+var currentEmpruntVariation1=Object.seal(new Emprunt.empruntData());
+var currentEmpruntVariation2=Object.seal(new Emprunt.empruntData());
+var currentEmpruntFormData=Object.seal(new Emprunt.empruntData());
+
 
 $(document).ready(function(){
-
 	
     FastClick.attach(document.body);
 
-	
-	
-	//Global variables
-
-//Contains current results after computation
-currentEmpruntVariation1={
-	capital:null,
-	echeance:null,
-	taux:null,
-	duree:null,
-	periodicite:null,
-	isValid:false
-};
-
-//Contains current results after computation, variation 2
-currentEmpruntVariation2={
-	capital:null,
-	echeance:null,
-	taux:null,
-	duree:null,
-	periodicite:null,
-	isValid:false
-};
-
-//Contains form data, in order to save
-currentEmpruntFormData={
-	capital:null,
-	echeance:null,
-	taux:null,
-	duree:null,
-	periodicite:null,
-	isValid:false
-};
-
 
 //Storage initialization
-db=initDb();
+initDb();
 
 	$('#listeEmprunts').html(listEmprunts());
 
@@ -162,7 +133,7 @@ db=initDb();
 			error.insertAfter( element.parent());
 		},
 		submitHandler:function(form){
-			computeMissing();
+			computeMissing(currentEmpruntVariation1,currentEmpruntVariation2,currentEmpruntFormData);
 
 		}});
 }).on('deviceready',function(){
@@ -227,7 +198,7 @@ db=initDb();
 				<div data-role="navbar">
 					<ul>
 						<li><input type="submit" id="btncalculer" data-icon="check" data-iconpos="top" name="btncalculer" value="Calculer la grandeur manquante"></li>
-						<li><button id="linkPageTableau" disabled="disabled" onclick="computeTables();" class="ui-btn" data-icon="grid">Tableaux d'amortissement</button></li>
+						<li><button id="linkPageTableau" disabled="disabled" onclick="computeTables(currentEmpruntVariation1,currentEmpruntVariation2);" class="ui-btn" data-icon="grid">Tableaux d'amortissement</button></li>
 						<li><button id="saveEmprunt" disabled="disabled" onclick="saveEmpruntToFavorite(currentEmpruntFormData);" class="ui-btn" data-icon="star">Enregistrer cet emprunt</button></li>
 					</ul>
 				</div>
