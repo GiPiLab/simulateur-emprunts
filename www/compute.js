@@ -12,6 +12,11 @@ function computeTables(currentEmpruntVariation1, currentEmpruntVariation2)
 	}
 	var output = '';
 
+
+	if(window.cordova)
+		ActivityIndicator.show("Patienter...");
+
+
 	if (currentEmpruntVariation1.isValid)
 	{
 		output += "<h3 class='ui-bar ui-bar-a'>" + Emprunt.getEmpruntDescription(currentEmpruntVariation1.capital, currentEmpruntVariation1.taux, currentEmpruntVariation1.duree, currentEmpruntVariation1.periodicite) + ', profil &laquo;&nbsp;échéance constante&nbsp;&raquo;</h3>';
@@ -34,12 +39,13 @@ function computeTables(currentEmpruntVariation1, currentEmpruntVariation2)
 		output += "<div class='ui-body'>" + Emprunt.echeanceConstante.tableauAmortissement(currentEmpruntVariation2, 50) + '</div>';
 
 	}
-		$('#tableau').html(output);
+	$('#tableau').html(output);
 
 	$('#tableau').trigger('create');
+
 	$.mobile.pageContainer.pagecontainer('change', '#pageTableaux', {transition: 'none'});
-
-
+	if(window.cordova)	
+		ActivityIndicator.hide();
 }
 
 //Computes the missing value depending of the filled fields, display and store the results
@@ -85,6 +91,8 @@ function computeMissing(empruntVar1, empruntVar2, empruntFormData)
 		alert('Remplissez exactement trois champs puis appuyez sur le bouton pour calculer la grandeur manquante');
 		return;
 	}
+	
+
 
 	var periodicite = new Decimal($('#select-periodicite').val());
 	empruntVar1.periodicite = periodicite;
@@ -215,6 +223,8 @@ function computeMissing(empruntVar1, empruntVar2, empruntFormData)
 			alert("L'echéance ne peut pas être supérieure au capital !");
 			return;
 		}
+		if(window.cordova)
+			ActivityIndicator.show("Patienter...");
 		empruntVar1.capital = capital;
 		empruntVar1.duree = duree;
 		empruntVar1.echeance = echeance;
@@ -230,8 +240,6 @@ function computeMissing(empruntVar1, empruntVar2, empruntFormData)
 		empruntVar2.echeance = echeance;
 
 		var tauxEcheanceConstante = Emprunt.echeanceConstante.calculeTaux(capital, echeance, duree, periodicite);
-
-
 		var res = 'Taux annuel estimé pour un emprunt de '+ capital.toFormat(2) + '€ pendant '+ Emprunt.formatDureeEmprunt(duree, periodicite) + ', échéance constante de '+ echeance.toFormat(2) + '€ :';
 
 
@@ -268,7 +276,8 @@ function computeMissing(empruntVar1, empruntVar2, empruntFormData)
 			res += "<div class='resultat'>pas de résultat</div>";
 		}
 		$('#resultatCapitalConstant').html(res);
-
+		if(window.cordova)
+			ActivityIndicator.hide();
 	}
 	//Calcul du capital
 	else if (setTaux && setDuree && setEcheance)
@@ -329,9 +338,7 @@ function computeMissing(empruntVar1, empruntVar2, empruntFormData)
 			res += "<div class='resultat'>pas de résultat</div>";
 		}
 		$('#resultatCapitalConstant').html(res);
-
 	}
-
 	else
 	{
 		throw new Error("Erreur de determination de l'inconnue");

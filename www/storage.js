@@ -34,7 +34,7 @@ function saveEmpruntToFavorite(emp)
 
 	$('#listeEmprunts').html(listEmprunts());
 	$('#listeEmprunts').trigger('create');
-	alert('Emprunt enregistré en favori !');
+	$.mobile.pageContainer.pagecontainer('change', '#pageMesEmprunts', {transition: 'none'});
 }
 
 function loadEmprunt(i)
@@ -82,6 +82,7 @@ function loadEmprunt(i)
 			}catch (e) {}
 		}
 	$.mobile.pageContainer.pagecontainer('change', '#pageEmprunt', {transition: 'none'});
+	computeMissing(currentEmpruntVariation1,currentEmpruntVariation2,currentEmpruntFormData);
 	}
 	else
 	{
