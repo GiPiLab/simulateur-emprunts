@@ -139,5 +139,38 @@ function listEmprunts()
 	return out;
 }
 
+function saveTheme(themeSwatch)
+{
+	if(themeSwatch===undefined)
+		throw new Error("Undefined swatch");
+	if(themeSwatch!=="a" &&themeSwatch!=="b" && themeSwatch!=="c" && themeSwatch!=="d" && themeSwatch!=="e" && themeSwatch!=="f" && themeSwatch!=="g")
+	{
+		throw new Error("Bad swatch");
+	}
+	$.mobile.page.prototype.options.theme=themeSwatch;
+	localStorage.setItem("themeswatch",themeSwatch);
+	jQuery.mobile.pageContainer.pagecontainer('change', window.location.href, {
+		allowSamePageTransition: true,
+		transition: 'none',
+		reloadPage: true 
+	});
+}
 
+function loadTheme()
+{
+	if(localStorage.themeswatch)
+	{
+		var themeSwatch=localStorage.getItem('themeswatch');
+		if(themeSwatch!=="a" && themeSwatch!=="b" && themeSwatch!=="c" && themeSwatch!=="d" && themeSwatch!=="e" && themeSwatch!=="f" && themeSwatch!=="g")
+		{
+			throw new Error("Bad swatch");
+		}
+		$.mobile.page.prototype.options.theme=themeSwatch;
 
+		jQuery.mobile.pageContainer.pagecontainer('change', window.location.href, {
+			allowSamePageTransition: true,
+			transition: 'none',
+			reloadPage: true 
+		});
+	}	
+}
