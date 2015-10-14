@@ -29,7 +29,7 @@ div.resultat{
 }
 		</style>
 
-		<script src="libs/fastclick.js"></script>
+		<script src="libs/fastclick.min.js"></script>
 		<script src="libs/jquery-2.1.4.min.js"></script>
 		<script src="libs/jquery.mobile-1.4.5.min.js"></script>
 		<script src="libs/jquery.validate.min.js"></script>
@@ -74,8 +74,6 @@ $(document).ready(function(){
 	FastClick.attach(document.body);
 
 	$(document).on("pagecreate",loadTheme());
-
-
 
 	$('#listeEmprunts').html(listEmprunts());
 
@@ -379,7 +377,7 @@ $(document).ready(function(){
 
 
 
-			<div data-role="panel" id="optionPanel">
+			<div data-role="panel" id="optionPanel" class="ui-page-theme-a">
 					<a href='#' class="ui-btn" onclick='window.open("http://gipilab.org/page54-pression-conjoncturelle","_system");'>Pression conjoncturelle</a>
 					<h2>Thème</h2>
 					<a href="#" class="ui-btn ui-btn-inline ui-btn-a" onclick="saveTheme('a');loadTheme();"></a>
@@ -389,6 +387,9 @@ $(document).ready(function(){
 					<a href="#" class="ui-btn ui-btn-inline ui-btn-e" onclick="saveTheme('e');loadTheme();"></a>
 					<a href="#" class="ui-btn ui-btn-inline ui-btn-f" onclick="saveTheme('f');loadTheme();"></a>
 					<a href="#" class="ui-btn ui-btn-inline ui-btn-g" onclick="saveTheme('g');loadTheme();"></a>
+					<h3>À propos</h3>
+					<p style='font-size:small'>Simulateur d'emprunts version 0.0.6</p>
+					<p style='font-size:small'><a href="#" onclick='window.open("http://gipilab.org","_system");'>Laboratoire de Recherche pour le Développement Local</a></p>
 			</div>
 
 

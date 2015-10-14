@@ -7,7 +7,7 @@ var Emprunt = {
 	empruntData: function()
 	{
 		var that = this;
-		this.reset = function()
+		that.reset = function()
 		{
 			that.capital = null;
 			that.echeance = null;
@@ -16,7 +16,7 @@ var Emprunt = {
 			that.periodicite = null;
 			that.isValid = false;
 		};
-		this.reset();
+		that.reset();
 	},
 	periodiciteToString: function(periodicite)
 	{
@@ -89,39 +89,39 @@ var Emprunt = {
 
 		if (capital === null && taux !== null && duree !== null && echeance !== null)
 		{
-			var taux = new Decimal(taux);
-			var echeance = new Decimal(echeance);
-			var out = '<h1>Calcul du capital</h1><p>échéance approchée = '+ echeance.toFormat(2) + '€';
-			out += ' ; taux annuel = '+ taux.times(100).toFormat(3) + '%';
+			var dTaux = new Decimal(taux);
+			var dEcheance = new Decimal(echeance);
+			var out = '<h1>Calcul du capital</h1><p>échéance approchée = '+ dEcheance.toFormat(2) + '€';
+			out += ' ; taux annuel = '+ dTaux.times(100).toFormat(3) + '%';
 			out += ' ; durée = '+ Emprunt.formatDureeEmprunt(duree, periodicite) + '</p>';
 			return out;
 		}
 		else if (capital !== null && taux === null && duree !== null && echeance !== null)
 		{
-			var capital = new Decimal(capital);
-			var echeance = new Decimal(echeance);
-			var out = '<h1>Calcul du taux</h1><p>échéance approchée = '+ echeance.toFormat(2) + '€';
-			out += ' ; somme empruntée = '+ capital.toFormat(2) + '€';
+			var dCapital = new Decimal(capital);
+			var dEcheance = new Decimal(echeance);
+			var out = '<h1>Calcul du taux</h1><p>échéance approchée = '+ dEcheance.toFormat(2) + '€';
+			out += ' ; somme empruntée = '+ dCapital.toFormat(2) + '€';
 			out += ' ; durée = '+ Emprunt.formatDureeEmprunt(duree, periodicite) + '</p>';
 			return out;
 		}
 		else if (capital !== null && taux !== null && duree === null && echeance !== null)
 		{
-			var taux = new Decimal(taux);
-			var echeance = new Decimal(echeance);
-			var capital = new Decimal(capital);
-			var out = '<h1>Calcul de la durée</h1><p>échéance approchée = '+ echeance.toFormat(2) + '€';
-			out += ' ; somme empruntée = '+ capital.toFormat(2) + '€';
-			out += ' ; taux annuel = '+ taux.times(100).toFormat(3) + '% ; périodicité '+ Emprunt.periodiciteToString(periodicite) + '</p>';
+			var dTaux = new Decimal(taux);
+			var dEcheance = new Decimal(echeance);
+			var dCapital = new Decimal(capital);
+			var out = '<h1>Calcul de la durée</h1><p>échéance approchée = '+ dEcheance.toFormat(2) + '€';
+			out += ' ; somme empruntée = '+ dCapital.toFormat(2) + '€';
+			out += ' ; taux annuel = '+ dTaux.times(100).toFormat(3) + '% ; périodicité '+ Emprunt.periodiciteToString(periodicite) + '</p>';
 			return out;
 		}
 		else if (capital !== null && taux !== null && duree !== null && echeance === null)
 		{
-			var capital = new Decimal(capital);
-			var taux = new Decimal(taux);
+			var dCapital = new Decimal(capital);
+			var dTaux = new Decimal(taux);
 
-			var out = "<h1>Calcul de l'échéance</h1><p>somme empruntée = " + capital.toFormat(2) + '€';
-			out += ' ; taux annuel = '+ taux.times(100).toFormat(3) + '%';
+			var out = "<h1>Calcul de l'échéance</h1><p>somme empruntée = " + dCapital.toFormat(2) + '€';
+			out += ' ; taux annuel = '+ dTaux.times(100).toFormat(3) + '%';
 			out += ' ; durée = '+ Emprunt.formatDureeEmprunt(duree, periodicite) + '</p>';
 			return out;
 		}

@@ -13,7 +13,7 @@ function computeTables(currentEmpruntVariation1, currentEmpruntVariation2)
 	var output = '';
 
 
-	if(window.cordova)
+	if(typeof ActivityIndicator!=="undefined")
 		ActivityIndicator.show("Patienter...");
 
 
@@ -40,11 +40,10 @@ function computeTables(currentEmpruntVariation1, currentEmpruntVariation2)
 
 	}
 	$('#tableau').html(output);
-
 	$('#tableau').trigger('create');
 
 	$.mobile.pageContainer.pagecontainer('change', '#pageTableaux', {transition: 'none'});
-	if(window.cordova)	
+	if(typeof ActivityIndicator!=="undefined")	
 		ActivityIndicator.hide();
 }
 
@@ -223,8 +222,9 @@ function computeMissing(empruntVar1, empruntVar2, empruntFormData)
 			alert("L'echéance ne peut pas être supérieure au capital !");
 			return;
 		}
-		if(window.cordova)
+		if(typeof ActivityIndicator!=="undefined")
 			ActivityIndicator.show("Patienter...");
+
 		empruntVar1.capital = capital;
 		empruntVar1.duree = duree;
 		empruntVar1.echeance = echeance;
@@ -276,7 +276,7 @@ function computeMissing(empruntVar1, empruntVar2, empruntFormData)
 			res += "<div class='resultat'>pas de résultat</div>";
 		}
 		$('#resultatCapitalConstant').html(res);
-		if(window.cordova)
+		if(typeof ActivityIndicator!=="undefined")
 			ActivityIndicator.hide();
 	}
 	//Calcul du capital

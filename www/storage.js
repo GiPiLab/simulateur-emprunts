@@ -15,16 +15,22 @@ function saveEmpruntToFavorite(emp)
 		throw new TypeError('Invalid object found instead of empruntData !');
 	}
 
-	if (localStorage.simulateurEmpruntslisteEmprunts)
+	if(!window.localStorage)
 	{
-		var listEmp = JSON.parse(localStorage.getItem('simulateurEmpruntslisteEmprunts'));
+		alert("Stockage local non disponible, sauvegarde impossible");
+		return;
+	}
+
+	if (window.localStorage.simulateurEmpruntslisteEmprunts)
+	{
+		var listEmp = JSON.parse(window.localStorage.getItem('simulateurEmpruntslisteEmprunts'));
 		listEmp.push(emp);
-		localStorage.setItem('simulateurEmpruntslisteEmprunts', JSON.stringify(listEmp));
+		window.localStorage.setItem('simulateurEmpruntslisteEmprunts', JSON.stringify(listEmp));
 	}
 	else
 	{
 		var listEmp = [emp];
-		localStorage.setItem('simulateurEmpruntslisteEmprunts', JSON.stringify(listEmp));
+		window.localStorage.setItem('simulateurEmpruntslisteEmprunts', JSON.stringify(listEmp));
 	}
 
 	$('#listeEmprunts').html(listEmprunts());
@@ -38,7 +44,12 @@ function loadEmprunt(i)
 	{
 		throw new Error('undefined index to load');
 	}
-	var listEmp = JSON.parse(localStorage.getItem('simulateurEmpruntslisteEmprunts'));
+	if(!window.localStorage)
+	{
+		alert("Stockage local non disponible, chargement impossible");
+		return;
+	}
+	var listEmp = JSON.parse(window.localStorage.getItem('simulateurEmpruntslisteEmprunts'));
 
 	if (i >= 0 && i < listEmp.length)
 	{
@@ -77,7 +88,7 @@ function loadEmprunt(i)
 			}catch (e) {}
 		}
 	$.mobile.pageContainer.pagecontainer('change', '#pageEmprunt', {transition: 'none'});
-	computeMissing(currentEmpruntVariation1,currentEmpruntVariation2,currentEmpruntFormData);
+	$('#formEmprunt').submit();
 	}
 	else
 	{
@@ -91,7 +102,12 @@ function removeEmprunt(i)
 	{
 		throw new Error('undefined index to remove');
 	}
-	var listEmp = JSON.parse(localStorage.getItem('simulateurEmpruntslisteEmprunts'));
+	if(!window.localStorage)
+	{
+		alert("Stockage local non disponible, chargement impossible");
+		return;
+	}
+	var listEmp = JSON.parse(window.localStorage.getItem('simulateurEmpruntslisteEmprunts'));
 
 	if (i >= 0 && i < listEmp.length)
 	{
@@ -101,7 +117,7 @@ function removeEmprunt(i)
 			throw new TypeError('Invalid object found instead of empruntData !');
 		}
 		listEmp.splice(i, 1);
-		localStorage.setItem('simulateurEmpruntslisteEmprunts', JSON.stringify(listEmp));
+		window.localStorage.setItem('simulateurEmpruntslisteEmprunts', JSON.stringify(listEmp));
 	}
 	else
 	{
@@ -112,9 +128,14 @@ function removeEmprunt(i)
 function listEmprunts()
 {
 	var out = '';
-	if (localStorage.simulateurEmpruntslisteEmprunts)
+	if(!window.localStorage)
 	{
-		var listEmp = JSON.parse(localStorage.getItem('simulateurEmpruntslisteEmprunts'));
+		alert("Stockage local non disponible, chargement impossible");
+		return;
+	}
+	if (window.localStorage.simulateurEmpruntslisteEmprunts)
+	{
+		var listEmp = JSON.parse(window.localStorage.getItem('simulateurEmpruntslisteEmprunts'));
 
 		out += "<ul data-role='listview' data-split-icon='delete'>";
 
@@ -144,14 +165,19 @@ function saveTheme(themeSwatch)
 	{
 		throw new Error("Bad swatch");
 	}
-	localStorage.setItem("themeswatch",themeSwatch);
+	if(!window.localStorage)
+	{
+		alert("Stockage local non disponible, enregistrement impossible");
+		return;
+	}
+	window.localStorage.setItem("themeswatch",themeSwatch);
 }
 
 function loadTheme()
 {
-	if(localStorage.themeswatch)
+	if(window.localStorage.themeswatch)
 	{
-		var themeSwatch=localStorage.getItem('themeswatch');
+		var themeSwatch=window.localStorage.getItem('themeswatch');
 		if(themeSwatch!=="a" && themeSwatch!=="b" &&themeSwatch!=="c" && themeSwatch!=="d" && themeSwatch!=="e" && themeSwatch!=="f" && themeSwatch!=="g")
 		{
 			throw new Error("Bad swatch");
