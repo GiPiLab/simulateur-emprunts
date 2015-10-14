@@ -7,8 +7,10 @@
 		<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
 
 		<meta charset="utf-8">
-		<!--		<link rel="stylesheet" href="libs/jquery.mobile-1.4.5.min.css">-->
-		<link rel="stylesheet" href="libs/jquerymobile-flattheme/jquery.mobile.flatui.css">
+		<link rel="stylesheet" href="libs/theme_thib1/thib1.min.css">
+		<link rel="stylesheet" href="libs/theme_thib1/jquery.mobile.icons.min.css">
+		<link rel="stylesheet" href="libs/jquery.mobile.structure-1.4.5.min.css">
+		
 		
 		<style>
 label.error {
@@ -56,9 +58,6 @@ Decimal.config({
 			groupSize:3
 		}
 	});
-initDb();
-loadTheme();
-$.mobile.defaultPageTransition="none";
 
 //Sealed global variables
 var currentEmpruntVariation1=Object.seal(new Emprunt.empruntData());
@@ -67,8 +66,16 @@ var currentEmpruntFormData=Object.seal(new Emprunt.empruntData());
 
 
 $(document).ready(function(){
+
+	$.mobile.defaultPageTransition="none";
+	
+	$( "body>[data-role='panel']" ).panel();
 	
 	FastClick.attach(document.body);
+
+	$(document).on("pagecreate",loadTheme());
+
+
 
 	$('#listeEmprunts').html(listEmprunts());
 
@@ -141,17 +148,6 @@ $(document).ready(function(){
 });
 		</script>
 		<div data-role="page" id="pageEmprunt">
-			<div data-role="panel" id="optionPanel">
-					<a href='#' class="ui-btn" onclick='window.open("http://gipilab.org/page54-pression-conjoncturelle","_system");'>Pression conjoncturelle</a>
-					<h2>Thème</h2>
-					<a href="#" class="ui-btn ui-btn-inline ui-btn-a" onclick="saveTheme('a');"></a>
-					<a href="#" class="ui-btn ui-btn-inline ui-btn-b" onclick="saveTheme('b');"></a>
-					<a href="#" class="ui-btn ui-btn-inline ui-btn-c" onclick="saveTheme('c');"></a>
-					<a href="#" class="ui-btn ui-btn-inline ui-btn-d" onclick="saveTheme('d');"></a>
-					<a href="#" class="ui-btn ui-btn-inline ui-btn-e" onclick="saveTheme('e');"></a>
-					<a href="#" class="ui-btn ui-btn-inline ui-btn-f" onclick="saveTheme('f');"></a>
-					<a href="#" class="ui-btn ui-btn-inline ui-btn-g" onclick="saveTheme('g');"></a>
-			</div>
 
 			<div data-role="header">
 				<h1>Nouvel emprunt</h1>
@@ -203,11 +199,11 @@ $(document).ready(function(){
 
 				<div class="ui-grid-a ui-responsive">
 					<div class="ui-block-a">
-						<h3 class="ui-bar" style='text-align:center'>Profil &laquo;&nbsp;échéance constante&nbsp;&raquo;</h3>
+						<h3 class="ui-bar ui-bar-a" style='text-align:center'>Profil &laquo;&nbsp;échéance constante&nbsp;&raquo;</h3>
 						<div class="ui-body" id="resultatEcheanceConstante"><p style='text-align:center'><em>Résultats des calculs pour le profil d'amortissement à échéances constantes</em></p></div>
 					</div>
 					<div class="ui-block-b">
-						<h3 class="ui-bar" style='text-align:center'>Profil &laquo;&nbsp;capital constant&nbsp;&raquo;</h3>
+						<h3 class="ui-bar ui-bar-b" style='text-align:center'>Profil &laquo;&nbsp;capital constant&nbsp;&raquo;</h3>
 						<div class="ui-body" id="resultatCapitalConstant"><p style='text-align:center'><em>Résultats des calculs pour le profil d'amortissement à capital constant</em></p></div>
 					</div>
 				</div>
@@ -229,6 +225,7 @@ $(document).ready(function(){
 			<div data-role="header">
 				<h1>Tableaux d'amortissement</h1>
 	   <a href="#" onclick="navigator.app.exitApp();" data-icon="power" data-iconpos="notext" class="ui-btn-right">Quitter</a>
+	<a href='#optionPanel' data-icon="bars" data-iconpos="notext" class="ui-btn-left"></a>
 			</div>
 
 			<div data-role="main" class="ui-content">
@@ -252,11 +249,12 @@ $(document).ready(function(){
 			<div data-role="header">
 								<h1>Mes emprunts</h1>
 				<a href="#" onclick="navigator.app.exitApp();" data-icon="power" data-iconpos="notext" class="ui-btn-right">Quitter</a>
+	<a href='#optionPanel' data-icon="bars" data-iconpos="notext" class="ui-btn-left"></a>
 				
 				</div>
 
 			<div data-role="main" class="ui-content">
-				<div id="listeEmprunts">
+				<div data-role="content" id="listeEmprunts">
 				</div>
 			</div>
 			<div data-role="footer" data-position="fixed">
@@ -274,19 +272,19 @@ $(document).ready(function(){
 			<div data-role="header">
 				<h1>Présentation</h1>
 	<a href="#" onclick="navigator.app.exitApp();" data-icon="power" data-iconpos="notext" class="ui-btn-right">Quitter</a>
+	<a href='#optionPanel' data-icon="bars" data-iconpos="notext" class="ui-btn-left"></a>
 
 			</div>
 
 			<div data-role="main" class="ui-content">
 
 
-				<p>Le simulateur d'emprunt conçu par le Laboratoire de Recherche pour le Développement Local répond aux attentes de tout candidat à l'emprunt, qu'il s'agisse d'une Collectivité territoriale, dans le cadre de ses besoins de financement à moyen et long terme ou de l'un de ses gestionnaires, pour ses besoins particuliers.</p>
+				Le simulateur d'emprunt conçu par le Laboratoire de Recherche pour le Développement Local répond aux attentes de tout candidat à l'emprunt, qu'il s'agisse d'une Collectivité territoriale, dans le cadre de ses besoins de financement à moyen et long terme ou de l'un de ses gestionnaires, pour ses besoins particuliers.
 
 				<div data-role="collapsible">
 				<h2>Théorie</h2>
 
-
-				<p>En tant qu'objet, un emprunt peut être défini comme le cadre dans lequel s'inscrit indissociablement un ensemble de paramètres :</p>
+				En tant qu'objet, un emprunt peut être défini comme le cadre dans lequel s'inscrit indissociablement un ensemble de paramètres :
 
 				<ul>
 					<li>un besoin financier, exprimé par l'emprunteur et satisfait par un flux d'argent, la somme empruntée (ou capital), circulant, au moment voulu, entre un prêteur et l'emprunteur</li>
@@ -317,7 +315,7 @@ $(document).ready(function(){
 
 				<h2>Pratique</h2>
 
-				<p>Le simulateur d'emprunts conçu par le Laboratoire de Recherche pour le Développement Local assiste le candidat emprunteur dès la phase de recherche.</p>
+				Le simulateur d'emprunts conçu par le Laboratoire de Recherche pour le Développement Local assiste le candidat emprunteur dès la phase de recherche.
 
 				<p>D'une utilisation simple et intuitive, il s'appuie sur le principe du « calcul de l'inconnue ». Le simulateur dispose également d'un « élargisseur de champ ». Cet outil offre à l'utilisateur diverses variantes, proches de la réponse attendue et susceptibles de compléter utilement sa réflexion.</p>
 
@@ -365,9 +363,9 @@ $(document).ready(function(){
 
 				<div data-role="collapsible">
 				<h2>Formulation mathématique</h2>
-				<p>Les formules mathématiques et algorithmes utilisés dans ce simulateur sont accessibles ici : <a href="#" onclick='window.open("http://gipilab.org/fichiers/calcul_financier.pdf","_system","_location=yes");'>formulation mathématique du simulateur d'emprunts</a>.</p>
+				Les formules mathématiques et algorithmes utilisés dans ce simulateur sont accessibles ici : <a href="#" onclick='window.open("http://gipilab.org/fichiers/calcul_financier.pdf","_system","_location=yes");'>formulation mathématique du simulateur d'emprunts</a>.
 				</div>
-			</div>
+		</div>
 			<div data-role="footer" data-position="fixed">
 				<div data-role="navbar">
 					<ul>
@@ -378,5 +376,21 @@ $(document).ready(function(){
 				</div>
 			</div>
 		</div>
+
+
+
+			<div data-role="panel" id="optionPanel">
+					<a href='#' class="ui-btn" onclick='window.open("http://gipilab.org/page54-pression-conjoncturelle","_system");'>Pression conjoncturelle</a>
+					<h2>Thème</h2>
+					<a href="#" class="ui-btn ui-btn-inline ui-btn-a" onclick="saveTheme('a');loadTheme();"></a>
+					<a href="#" class="ui-btn ui-btn-inline ui-btn-b" onclick="saveTheme('b');loadTheme();"></a>
+					<a href="#" class="ui-btn ui-btn-inline ui-btn-c" onclick="saveTheme('c');loadTheme();"></a>
+					<a href="#" class="ui-btn ui-btn-inline ui-btn-d" onclick="saveTheme('d');loadTheme();"></a>
+					<a href="#" class="ui-btn ui-btn-inline ui-btn-e" onclick="saveTheme('e');loadTheme();"></a>
+					<a href="#" class="ui-btn ui-btn-inline ui-btn-f" onclick="saveTheme('f');loadTheme();"></a>
+					<a href="#" class="ui-btn ui-btn-inline ui-btn-g" onclick="saveTheme('g');loadTheme();"></a>
+			</div>
+
+
 	</body>
 </html>

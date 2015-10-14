@@ -1,12 +1,7 @@
 'use strict';
 
-function initDb()
-{
-	if (typeof(Storage) === 'undefined')
-	{
-		throw new Error('Error no local storage !');
-	}
-}
+
+/*Storage for emprunts*/
 
 function saveEmpruntToFavorite(emp)
 {
@@ -131,13 +126,15 @@ function listEmprunts()
 				throw new TypeError('Invalid object found instead of empruntData !');
 			}
 			var description = Emprunt.formatEmpruntQuery(emp.capital, emp.taux, emp.duree, emp.echeance, emp.periodicite);
-			out += "<li><a href='#' onclick='loadEmprunt(" + i + ");'>" + description + "</a><a href='#' onclick='removeEmprunt(" + i + ");$(\"#listeEmprunts\").html(listEmprunts());$(\"#listeEmprunts\").trigger(\"create\");'>Supprimer</a></li>";
+			out += "<li style='margin:1em'><a href='#' onclick='loadEmprunt(" + i + ");'>" + description + "</a><a href='#' onclick='removeEmprunt(" + i + ");$(\"#listeEmprunts\").html(listEmprunts());$(\"#listeEmprunts\").trigger(\"create\");'>Supprimer</a></li>";
 		}
 
 		out += '</ul>';
 	}
 	return out;
 }
+
+/*Storage for themes*/
 
 function saveTheme(themeSwatch)
 {
@@ -147,13 +144,7 @@ function saveTheme(themeSwatch)
 	{
 		throw new Error("Bad swatch");
 	}
-	$.mobile.page.prototype.options.theme=themeSwatch;
 	localStorage.setItem("themeswatch",themeSwatch);
-	jQuery.mobile.pageContainer.pagecontainer('change', window.location.href, {
-		allowSamePageTransition: true,
-		transition: 'none',
-		reloadPage: true 
-	});
 }
 
 function loadTheme()
@@ -161,16 +152,16 @@ function loadTheme()
 	if(localStorage.themeswatch)
 	{
 		var themeSwatch=localStorage.getItem('themeswatch');
-		if(themeSwatch!=="a" && themeSwatch!=="b" && themeSwatch!=="c" && themeSwatch!=="d" && themeSwatch!=="e" && themeSwatch!=="f" && themeSwatch!=="g")
+		if(themeSwatch!=="a" && themeSwatch!=="b" &&themeSwatch!=="c" && themeSwatch!=="d" && themeSwatch!=="e" && themeSwatch!=="f" && themeSwatch!=="g")
 		{
 			throw new Error("Bad swatch");
 		}
-		$.mobile.page.prototype.options.theme=themeSwatch;
-
-		jQuery.mobile.pageContainer.pagecontainer('change', window.location.href, {
-			allowSamePageTransition: true,
-			transition: 'none',
-			reloadPage: true 
-		});
+		$("#pageEmprunt").removeClass("ui-page-theme-a ui-page-theme-b ui-page-theme-c ui-page-theme-d ui-page-theme-e ui-page-theme-f ui-page-theme-g").addClass("ui-page-theme-"+themeSwatch);
+		$("#pagePresentation").removeClass("ui-page-theme-a ui-page-theme-b ui-page-theme-c ui-page-theme-d ui-page-theme-e ui-page-theme-f ui-page-theme-g").addClass("ui-page-theme-"+themeSwatch);
+		$("#pageMesEmprunts").removeClass("ui-page-theme-a ui-page-theme-b ui-page-theme-c ui-page-theme-d ui-page-theme-e ui-page-theme-f ui-page-theme-g").addClass("ui-page-theme-"+themeSwatch);
+		$("#pageTableaux").removeClass("ui-page-theme-a ui-page-theme-b ui-page-theme-c ui-page-theme-d ui-page-theme-e ui-page-theme-f ui-page-theme-g").addClass("ui-page-theme-"+themeSwatch);
+		$("#optionPanel").removeClass("ui-page-theme-a ui-page-theme-b ui-page-theme-c ui-page-theme-d ui-page-theme-e ui-page-theme-f ui-page-theme-g").addClass("ui-page-theme-"+themeSwatch);
+//		$(".ui-bar").removeClass("ui-bar-a ui-bar-b ui-bar-c ui-bar-d ui-bar-e ui-bar-f ui-bar-g").addClass("ui-bar-"+themeSwatch);
 	}	
 }
+

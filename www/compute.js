@@ -23,7 +23,7 @@ function computeTables(currentEmpruntVariation1, currentEmpruntVariation2)
 
 		output += "<div class='ui-body'>" + Emprunt.echeanceConstante.tableauAmortissement(currentEmpruntVariation1, 50) + '</div>';
 
-		output += "<h3 class='ui-bar ui-bar-a'>" + Emprunt.getEmpruntDescription(currentEmpruntVariation1.capital, currentEmpruntVariation1.taux, currentEmpruntVariation1.duree, currentEmpruntVariation1.periodicite) + ', profil &laquo;&nbsp;capital constant&nbsp;&raquo;</h3>';
+		output += "<h3 class='ui-bar ui-bar-b'>" + Emprunt.getEmpruntDescription(currentEmpruntVariation1.capital, currentEmpruntVariation1.taux, currentEmpruntVariation1.duree, currentEmpruntVariation1.periodicite) + ', profil &laquo;&nbsp;capital constant&nbsp;&raquo;</h3>';
 
 		output += "<div class='ui-body'>" + Emprunt.capitalConstant.tableauAmortissement(currentEmpruntVariation1, 50) + '</div>';
 	}
@@ -31,7 +31,7 @@ function computeTables(currentEmpruntVariation1, currentEmpruntVariation2)
 	if (currentEmpruntVariation2.isValid)
 	{
 		output += '<h2>Mais aussi...</h2>';
-		output += "<h3 class='ui-bar ui-bar-a'>" + Emprunt.getEmpruntDescription(currentEmpruntVariation2.capital, currentEmpruntVariation2.taux, currentEmpruntVariation2.duree, currentEmpruntVariation2.periodicite) + ', profil &laquo;&nbsp;capital constant&nbsp;&raquo;</h3>';
+		output += "<h3 class='ui-bar ui-bar-b'>" + Emprunt.getEmpruntDescription(currentEmpruntVariation2.capital, currentEmpruntVariation2.taux, currentEmpruntVariation2.duree, currentEmpruntVariation2.periodicite) + ', profil &laquo;&nbsp;capital constant&nbsp;&raquo;</h3>';
 
 		output += "<div class='ui-body'>" + Emprunt.capitalConstant.tableauAmortissement(currentEmpruntVariation2, 50) + '</div>';
 		output += "<h3 class='ui-bar ui-bar-a'>" + Emprunt.getEmpruntDescription(currentEmpruntVariation2.capital, currentEmpruntVariation2.taux, currentEmpruntVariation2.duree, currentEmpruntVariation2.periodicite) + ', profil &laquo;&nbsp;échéance constante&nbsp;&raquo;</h3>';
