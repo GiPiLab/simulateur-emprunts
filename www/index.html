@@ -35,12 +35,13 @@ div.resultat{
 		<script src="libs/jquery.validate.min.js"></script>
 		<script src="libs/jquery.validate-messages_FR_thib.min.js"></script>
 		<script src="libs/decimal.min.js"></script>
-		<script src="libs/date-fr-FR.min.js"></script>
+		<script src="libs/date-fr-FR.min.js"></script>-->
+		<script src="libs/all_libs.min.js"></script>
+		<!--		<script src="prog.min.js"></script>-->
 		<script src="emprunt.js"></script>
 		<script src="compute.js"></script>
-		<script src="storage.js"></script>-->
-		<script src="libs/all_libs.min.js"></script>
-		<script src="prog.min.js"></script>
+		<script src="storage.js"></script>
+		<script src="taux.js"></script>
 		<script type="text/javascript" charset="utf-8" src="cordova.js"></script>
 
 	</head>
@@ -149,7 +150,7 @@ $(document).ready(function(){
 		</script>
 		<div data-role="page" id="pageEmprunt">
 
-			<div data-role="header">
+			<div data-role="header" data-position="fixed">
 				<h1>Nouvel emprunt</h1>
 	<a href="#" onclick="navigator.app.exitApp();" data-icon="power" data-iconpos="notext" class="ui-btn-right">Quitter</a>
 	<a href='#optionPanel' data-icon="bars" data-iconpos="notext" class="ui-btn-left"></a>
@@ -222,7 +223,7 @@ $(document).ready(function(){
 		</div>
 
 		<div data-role="page" id="pageTableaux">
-			<div data-role="header">
+			<div data-role="header" data-position="fixed">
 				<h1>Tableaux d'amortissement</h1>
 	   <a href="#" onclick="navigator.app.exitApp();" data-icon="power" data-iconpos="notext" class="ui-btn-right">Quitter</a>
 	<a href='#optionPanel' data-icon="bars" data-iconpos="notext" class="ui-btn-left"></a>
@@ -246,7 +247,7 @@ $(document).ready(function(){
 		</div>
 		
 		<div data-role="page" id="pageMesEmprunts">
-			<div data-role="header">
+			<div data-role="header" data-position="fixed">
 								<h1>Mes emprunts</h1>
 				<a href="#" onclick="navigator.app.exitApp();" data-icon="power" data-iconpos="notext" class="ui-btn-right">Quitter</a>
 	<a href='#optionPanel' data-icon="bars" data-iconpos="notext" class="ui-btn-left"></a>
@@ -269,7 +270,7 @@ $(document).ready(function(){
 		</div>
 
 		<div data-role="page" id="pagePresentation" >
-			<div data-role="header">
+			<div data-role="header" data-position="fixed">
 				<h1>Présentation</h1>
 	<a href="#" onclick="navigator.app.exitApp();" data-icon="power" data-iconpos="notext" class="ui-btn-right">Quitter</a>
 	<a href='#optionPanel' data-icon="bars" data-iconpos="notext" class="ui-btn-left"></a>
@@ -389,6 +390,13 @@ $(document).ready(function(){
 					<a href="#" class="ui-btn ui-btn-inline ui-btn-e" onclick="saveTheme('e');loadTheme();"></a>
 					<a href="#" class="ui-btn ui-btn-inline ui-btn-f" onclick="saveTheme('f');loadTheme();"></a>
 					<a href="#" class="ui-btn ui-btn-inline ui-btn-g" onclick="saveTheme('g');loadTheme();"></a>
+
+					<h3>Taux</h3>
+
+					<button onclick="getTaux();">Maj</button>
+					<div id="divTaux"></div>
+
+
 					<h3>À propos</h3>
 					<p style='font-size:small'>Simulateur d'emprunts version 0.0.6</p>
 					<p style='font-size:small'><a href="#" onclick='window.open("http://gipilab.org","_system");'>Laboratoire de Recherche pour le Développement Local</a></p>
