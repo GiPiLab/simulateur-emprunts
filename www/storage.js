@@ -191,3 +191,51 @@ function loadTheme()
 	}	
 }
 
+function mustTauxBeRefreshed()
+{
+	if(window.localStorage.tauxRefreshDate)
+	{
+		var lastRefresh=window.localStorage.getItem("tauxRefreshDate");
+		//Check if we are tomorrow
+		if(Date.compare(Date.today(),Date.parse(lastRefresh))==1)
+		{
+			window.localStorage.setItem("tauxRefreshDate",Date.today().toString());
+			return true;
+		}
+		else
+		{
+			return false;
+		}
+	}
+
+	else
+	{
+		window.localStorage.setItem("tauxRefreshDate",Date.today().toString());
+		return true;
+	}
+}
+
+
+function saveLastTaux(resultFromAjax)
+{
+	window.localStorage.setItem("lastTaux",resultFromAjax);
+}
+
+
+function loadLastTaux()
+{
+	if(window.localStorage.lastTaux)
+	{
+		return window.localStorage.getItem("lastTaux");
+	}
+	else
+	{
+		return false;
+	}	
+
+}
+
+
+
+
+

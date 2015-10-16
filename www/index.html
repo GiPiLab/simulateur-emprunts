@@ -27,6 +27,19 @@ div.resultat{
 	padding:1em;
 	font-weight:bold;
 }
+
+
+
+
+table.tableTaux td, table.tableTaux th{
+	text-align:right;
+	padding-top:0;
+	padding-bottom:0;
+
+
+}	
+
+
 		</style>
 
 	<!--	<script src="libs/fastclick.min.js"></script>
@@ -73,6 +86,8 @@ $(document).ready(function(){
 	$.mobile.defaultPageTransition="none";
 	
 	$( "body>[data-role='panel']" ).panel();
+	getTaux();
+
 	
 	FastClick.attach(document.body);
 
@@ -380,9 +395,14 @@ $(document).ready(function(){
 
 
 
-			<div data-role="panel" id="optionPanel" class="ui-page-theme-a">
-					<a href='#' class="ui-btn" onclick='window.open("http://gipilab.org/page54-pression-conjoncturelle","_system");'>Pression conjoncturelle</a>
-					<h2>Thème</h2>
+			<div data-role="panel" id="optionPanel" class="ui-page-theme-a ui-panel-responsive">
+
+					<h3>Derniers taux</h3>
+
+					<div id="divTaux" style="text-align:center"></div>
+					<div style="text-align:right"><a href="#" data-mini="true" class="ui-btn ui-btn-inline ui-icon-refresh ui-btn-icon-notext ui-corner-all" onclick="getTaux(true);">Maj</a></div>
+
+					<h3>Thème</h3>
 					<a href="#" class="ui-btn ui-btn-inline ui-btn-a" onclick="saveTheme('a');loadTheme();"></a>
 					<a href="#" class="ui-btn ui-btn-inline ui-btn-b" onclick="saveTheme('b');loadTheme();"></a>
 					<a href="#" class="ui-btn ui-btn-inline ui-btn-c" onclick="saveTheme('c');loadTheme();"></a>
@@ -391,17 +411,9 @@ $(document).ready(function(){
 					<a href="#" class="ui-btn ui-btn-inline ui-btn-f" onclick="saveTheme('f');loadTheme();"></a>
 					<a href="#" class="ui-btn ui-btn-inline ui-btn-g" onclick="saveTheme('g');loadTheme();"></a>
 
-					<h3>Taux</h3>
-
-					<button onclick="getTaux();">Maj</button>
-					<div id="divTaux"></div>
-
-
 					<h3>À propos</h3>
-					<p style='font-size:small'>Simulateur d'emprunts version 0.0.6</p>
+					<p style='font-size:small'>Simulateur d'emprunts version 0.0.7</p>
 					<p style='font-size:small'><a href="#" onclick='window.open("http://gipilab.org","_system");'>Laboratoire de Recherche pour le Développement Local</a></p>
 			</div>
-
-
 	</body>
 </html>
