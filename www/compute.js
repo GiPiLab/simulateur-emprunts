@@ -19,24 +19,31 @@ function computeTables(currentEmpruntVariation1, currentEmpruntVariation2)
 
 	if (currentEmpruntVariation1.isValid)
 	{
-		output += "<h3 class='ui-bar ui-bar-a'>" + Emprunt.getEmpruntDescription(currentEmpruntVariation1.capital, currentEmpruntVariation1.taux, currentEmpruntVariation1.duree, currentEmpruntVariation1.periodicite) + ', profil &laquo;&nbsp;échéance constante&nbsp;&raquo;</h3>';
+		var tbl1=Emprunt.echeanceConstante.tableauAmortissement(currentEmpruntVariation1, 400);
+		var tbl2=Emprunt.capitalConstant.tableauAmortissement(currentEmpruntVariation1, 400);
 
-		output += "<div class='ui-body'>" + Emprunt.echeanceConstante.tableauAmortissement(currentEmpruntVariation1, 50) + '</div>';
+		output += "<div data-role='collapsible' data-theme='a'><h3>" + Emprunt.getEmpruntDescription(currentEmpruntVariation1.capital, currentEmpruntVariation1.taux, currentEmpruntVariation1.duree, currentEmpruntVariation1.periodicite) + ', profil &laquo;&nbsp;échéance constante&nbsp;&raquo;<br>Coût total de l\'emprunt : '+tbl1.coutTotalEmprunt.toFormat(2)+'€</h3>';
 
-		output += "<h3 class='ui-bar ui-bar-b'>" + Emprunt.getEmpruntDescription(currentEmpruntVariation1.capital, currentEmpruntVariation1.taux, currentEmpruntVariation1.duree, currentEmpruntVariation1.periodicite) + ', profil &laquo;&nbsp;capital constant&nbsp;&raquo;</h3>';
+		output += "<div>" + tbl1.tableauHtml + '</div></div>';
 
-		output += "<div class='ui-body'>" + Emprunt.capitalConstant.tableauAmortissement(currentEmpruntVariation1, 50) + '</div>';
+		output += "<div data-role='collapsible' data-theme='b'><h3>" + Emprunt.getEmpruntDescription(currentEmpruntVariation1.capital, currentEmpruntVariation1.taux, currentEmpruntVariation1.duree, currentEmpruntVariation1.periodicite) + ', profil &laquo;&nbsp;capital constant&nbsp;&raquo;<br>Coût total de l\'emprunt : '+tbl2.coutTotalEmprunt.toFormat(2)+'€</h3>';
+
+		output += "<div>" + tbl2.tableauHtml + '</div></div>';
 	}
 
 	if (currentEmpruntVariation2.isValid)
 	{
+		var tbl3=Emprunt.capitalConstant.tableauAmortissement(currentEmpruntVariation2, 400);
+		var tbl4=Emprunt.echeanceConstante.tableauAmortissement(currentEmpruntVariation2, 400);
+
+
 		output += '<h2>Mais aussi...</h2>';
-		output += "<h3 class='ui-bar ui-bar-b'>" + Emprunt.getEmpruntDescription(currentEmpruntVariation2.capital, currentEmpruntVariation2.taux, currentEmpruntVariation2.duree, currentEmpruntVariation2.periodicite) + ', profil &laquo;&nbsp;capital constant&nbsp;&raquo;</h3>';
+		output += "<div data-role='collapsible' data-theme='b'><h3>" + Emprunt.getEmpruntDescription(currentEmpruntVariation2.capital, currentEmpruntVariation2.taux, currentEmpruntVariation2.duree, currentEmpruntVariation2.periodicite) + ', profil &laquo;&nbsp;capital constant&nbsp;&raquo;<br>Coût total de l\'emprunt : '+tbl3.coutTotalEmprunt.toFormat(2)+'€</h3>';
 
-		output += "<div class='ui-body'>" + Emprunt.capitalConstant.tableauAmortissement(currentEmpruntVariation2, 50) + '</div>';
-		output += "<h3 class='ui-bar ui-bar-a'>" + Emprunt.getEmpruntDescription(currentEmpruntVariation2.capital, currentEmpruntVariation2.taux, currentEmpruntVariation2.duree, currentEmpruntVariation2.periodicite) + ', profil &laquo;&nbsp;échéance constante&nbsp;&raquo;</h3>';
+		output += "<div>" + tbl3.tableauHtml + '</div></div>';
+		output += "<div data-role='collapsible' data-theme='a'><h3>" + Emprunt.getEmpruntDescription(currentEmpruntVariation2.capital, currentEmpruntVariation2.taux, currentEmpruntVariation2.duree, currentEmpruntVariation2.periodicite) + ', profil &laquo;&nbsp;échéance constante&nbsp;&raquo;<br>Coût total de l\'emprunt : '+tbl4.coutTotalEmprunt.toFormat(2)+'€</h3>';
 
-		output += "<div class='ui-body'>" + Emprunt.echeanceConstante.tableauAmortissement(currentEmpruntVariation2, 50) + '</div>';
+		output += "<div>" + tbl4.tableauHtml + '</div>';
 
 	}
 	$('#tableau').html(output);

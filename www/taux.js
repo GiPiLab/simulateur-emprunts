@@ -8,17 +8,24 @@ function getTaux(forceRefresh)
 
 	if(forceRefresh===true ||mustTauxBeRefreshed())
 	{
-		$.ajax({url:"http://gipilab.org/progs/taux/getTauxJSON.php",success:function(result){
+		$.ajax({type:"GET", url:"http://gipilab.org/progs/taux/getTauxJSON.php",success:function(result){
 
 			console.log("Refreshing taux");
-			var data=JSON.parse(result);
+			try
+			{
+				var data=JSON.parse(result);
+			}
+			catch(e){
+				alert(e);
+				return;
+			}
 			$("#divTaux").html(tauxToHtml(data));
 			$("#divTaux").trigger("create");
 			$("#optionPanel").trigger("updatelayout");
 			saveLastTaux(result);
 
 		},
-			error:function(xhr){
+			error:function(xhr,error,errorThrown){
 				$("#divTaux").html("Erreur de chargement des taux");
 				$("#divTaux").trigger("create");
 				$("#optionPanel").trigger("updatelayout");

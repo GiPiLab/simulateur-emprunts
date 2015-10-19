@@ -337,7 +337,10 @@ var Emprunt = {
 
 
 			output += '</tbody></table>';
-			return output;
+			var resultObject={};
+			resultObject.tableauHtml=output;
+			resultObject.coutTotalEmprunt=sumIpe;
+			return resultObject;
 		}
 	},
 
@@ -472,7 +475,10 @@ var Emprunt = {
 				+ "</b></td><td style='text-align:right'><b>" + sumKe.toFormat(2) + "</b></td><td style='text-align:right'><b>" + sumIpe.toFormat(2) +
 				'</b></td><td>&nbsp;</td></tr></tbody></table>';
 			output += '</tbody></table>';
-			return output;
+			var resultObject={};
+			resultObject.tableauHtml=output;
+			resultObject.coutTotalEmprunt=sumIpe;
+			return resultObject;
 		}
 	}
 };

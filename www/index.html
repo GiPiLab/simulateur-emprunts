@@ -39,19 +39,16 @@ table.tableTaux td, table.tableTaux th{
 
 
 }	
-
-
 		</style>
 
-	<!--	<script src="libs/fastclick.min.js"></script>
+		<!--		<script src="libs/fastclick.min.js"></script>-->
 		<script src="libs/jquery-2.1.4.min.js"></script>
 		<script src="libs/jquery.mobile-1.4.5.min.js"></script>
 		<script src="libs/jquery.validate.min.js"></script>
 		<script src="libs/jquery.validate-messages_FR_thib.min.js"></script>
 		<script src="libs/decimal.min.js"></script>
-		<script src="libs/date-fr-FR.min.js"></script>-->
-		<script src="libs/all_libs.min.js"></script>
-		<!--		<script src="prog.min.js"></script>-->
+		<script src="libs/date-fr-FR.min.js"></script>
+
 		<script src="emprunt.js"></script>
 		<script src="compute.js"></script>
 		<script src="storage.js"></script>
@@ -90,7 +87,7 @@ $(document).ready(function(){
 	getTaux();
 
 	
-	FastClick.attach(document.body);
+//	FastClick.attach(document.body);
 
 	$(document).on("pagecreate",loadTheme());
 
@@ -396,8 +393,7 @@ $(document).ready(function(){
 
 
 
-			<div data-role="panel" id="optionPanel" class="ui-page-theme-a ui-panel-responsive">
-
+			<div data-display="overlay" data-role="panel"  id="optionPanel" class="ui-page-theme-a">
 					<h3>Derniers taux</h3>
 
 					<div id="divTaux" style="text-align:center"></div>
@@ -413,8 +409,9 @@ $(document).ready(function(){
 					<a href="#" class="ui-btn ui-btn-inline ui-btn-g" onclick="saveTheme('g');loadTheme();"></a>
 
 					<h3>À propos</h3>
-					<p style='font-size:small'>Simulateur d'emprunts version 0.0.7</p>
+					<p style='font-size:small'>Simulateur d'emprunts version 0.0.8</p>
 					<p style='font-size:small'><a href="#" onclick='window.open("http://gipilab.org","_system");'>Laboratoire de Recherche pour le Développement Local</a></p>
+					<a data-mini="true" class="ui-btn ui-btn-icon-left ui-icon-delete" href="#" data-rel="close">Fermer le panneau</a>
 			</div>
 	</body>
 </html>
