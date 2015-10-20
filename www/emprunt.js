@@ -268,7 +268,7 @@ var Emprunt = {
 
 			var echeance = Emprunt.echeanceConstante.calculeEcheance(emprunt.capital, emprunt.taux, emprunt.duree, emprunt.periodicite);
 			var rand = Math.floor(Math.random() * 1000 + 1).toString();
-			var output = "<table class='ui-responsive' id='tbl" + rand + "' data-role='table'><thead><tr><th>ieme</th><th>Date</<th><th style='text-align:right'>Echéance</th><th style='text-align:right'>Capital</th><th style='text-align:right'>Intérêts</th><th style='text-align:right'>Reste à payer</th></tr></thead><tbody>";
+			var output = "<table class='tableTaux' style='font-size:small' width='100%' id='tbl" + rand + "'><thead><tr><th style='text-align:left'>Date</<th><th>Echéance</th><th>Capital</th><th>Intérêts</th><th>Reste à payer</th></tr></thead><tbody>";
 
 			var tauxPer = emprunt.taux.dividedBy(emprunt.periodicite);
 			var ipe = emprunt.capital.times(tauxPer);
@@ -294,13 +294,13 @@ var Emprunt = {
 
 				if (i < breakpoint || i >= emprunt.duree - 2)
 				{
-					output += '<tr><th>'+ i + '</th><td>'+ date.toString('dd-MM-yyyy') + "</td><td style='text-align:right'>" + echeance.toFormat(2)
-						+ "</td><td style='text-align:right'>" + ke.toFormat(2) + "</td><td style='text-align:right'>" + ipe.toFormat(2) +
-						"</td><td style='text-align:right'>" + crd.toFormat(2) + '</td></tr>';
+					output += '<tr><td style="text-align:left">'+ date.toString('dd-MM-yyyy') + "</td><td>" + echeance.toFormat(2)
+						+ "</td><td>" + ke.toFormat(2) + "</td><td>" + ipe.toFormat(2) +
+						"</td><td>" + crd.toFormat(2) + '</td></tr>';
 				}
 				else if (i === breakpoint)
 				{
-					output += "<tr><th>...</th><td>...</td><td style='text-align:right'>...</td><td style='text-align:right'>...</td><td style='text-align:right'>...</td><td style='text-align:right'>...</td></tr>";
+					output += "<tr><td style='text-align:left'>...</td><td>...</td><td>...</td><td>...</td><td>...</td></tr>";
 				}
 
 				switch (per)
@@ -331,12 +331,11 @@ var Emprunt = {
 				crd = crd.minus(ke);
 			}
 
-			output += "<tr><th>TOTAL</th><td>&nbsp;</td><td style='text-align:right'><b>" + sumEch.toFormat(2)
-				+ "</b></td><td style='text-align:right'><b>" + sumKe.toFormat(2) + "</b></td><td style='text-align:right'><b>" + sumIpe.toFormat(2) +
+			output += "<tr><th style='text-align:left'>TOTAL</th><td><b>" + sumEch.toFormat(2)
+				+ "</b></td><td><b>" + sumKe.toFormat(2) + "</b></td><td><b>" + sumIpe.toFormat(2) +
 				'</b></td><td>&nbsp;</td></tr></tbody></table>';
 
 
-			output += '</tbody></table>';
 			var resultObject={};
 			resultObject.tableauHtml=output;
 			resultObject.coutTotalEmprunt=sumIpe;
@@ -407,7 +406,7 @@ var Emprunt = {
 			}
 			var echeance = Emprunt.capitalConstant.calculeEcheance(emprunt.capital, emprunt.taux, emprunt.duree, emprunt.periodicite);
 			var rand = Math.floor(Math.random() * 1000 + 1).toString();
-			var output = "<table class='ui-responsive' id='tbl" + rand + "' data-role='table'><thead><tr><th>ieme</th><th>Date</<th><th style='text-align:right'>Echéance</th><th style='text-align:right'>Capital</th><th style='text-align:right'>Intérêts</th><th style='text-align:right'>Reste à payer</th></tr></thead><tbody>";
+			var output = "<table style='font-size:small' class='tableTaux' width='100%' id='tbl" + rand + "'><thead><tr><th style='text-align:left'>Date</th><th>Echéance</th><th>Capital</th><th>Intérêts</th><th>Reste à payer</th></tr></thead><tbody>";
 
 			var tauxPer = emprunt.taux.dividedBy(emprunt.periodicite);
 			var ipe = emprunt.capital.times(tauxPer);
@@ -435,13 +434,13 @@ var Emprunt = {
 
 				if (i < breakpoint || i >= emprunt.duree - 2)
 				{
-					output += '<tr><th>'+ i + '</th><td>'+ date.toString('dd-MM-yyyy') + "</td><td style='text-align:right'>" + echeance.toFormat(2)
-						+ "</td><td style='text-align:right'>" + ke.toFormat(2) + "</td><td style='text-align:right'>" + ipe.toFormat(2) +
-						"</td><td style='text-align:right'>" + crd.toFormat(2) + '</td></tr>';
+					output += '<tr><td style="text-align:left">'+ date.toString('dd-MM-yyyy') + "</td><td>" + echeance.toFormat(2)
+						+ "</td><td>" + ke.toFormat(2) + "</td><td>" + ipe.toFormat(2) +
+						"</td><td>" + crd.toFormat(2) + '</td></tr>';
 				}
 				else if (i === breakpoint)
 				{
-					output += "<tr><th>...</th><td>...</td><td style='text-align:right'>...</td><td style='text-align:right'>...</td><td style='text-align:right'>...</td><td style='text-align:right'>...</td></tr>";
+					output += "<tr><td style='text-align:left'>...</td><td>...</td><td>...</td><td>...</td><td>...</td></tr>";
 				}
 
 				switch (per)
@@ -471,10 +470,9 @@ var Emprunt = {
 				echeance = ipe.plus(ke);
 			}
 
-			output += "<tr><th>TOTAL</th><td>&nbsp;</td><td style='text-align:right'><b>" + sumEch.toFormat(2)
-				+ "</b></td><td style='text-align:right'><b>" + sumKe.toFormat(2) + "</b></td><td style='text-align:right'><b>" + sumIpe.toFormat(2) +
+			output += "<tr><th style='text-align:left'>TOTAL</th><td><b>" + sumEch.toFormat(2)
+				+ "</b></td><td><b>" + sumKe.toFormat(2) + "</b></td><td><b>" + sumIpe.toFormat(2) +
 				'</b></td><td>&nbsp;</td></tr></tbody></table>';
-			output += '</tbody></table>';
 			var resultObject={};
 			resultObject.tableauHtml=output;
 			resultObject.coutTotalEmprunt=sumIpe;

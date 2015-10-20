@@ -22,6 +22,14 @@ label.error {
 	width: 100%;
 }
 
+.ui-collapsible-heading-toggle {
+    white-space : normal;
+}
+
+.ui-listview > li p{
+	white-space:normal;
+}
+
 div.resultat{
 	text-align:center;
 	font-size:2em;
@@ -63,7 +71,7 @@ Decimal.config({
 		format:
 		{
 			decimalSeparator:',',
-			groupSeparator:'&nbsp;',
+			groupSeparator:' ',
 			groupSize:3
 		}
 	});
@@ -201,18 +209,18 @@ $(document).ready(function(){
 				<div data-role="navbar">
 					<ul>
 						<li><button id="linkPageTableau" disabled="disabled" onclick="computeTables(currentEmpruntVariation1,currentEmpruntVariation2);" class="ui-btn" data-icon="grid">Tableaux d'amortissement</button></li>
-						<li><button id="saveEmprunt" disabled="disabled" onclick="saveEmpruntToFavorite(currentEmpruntFormData);" class="ui-btn" data-icon="star">Enregistrer cet emprunt</button></li>
+						<li><button id="saveEmprunt" disabled="disabled" onclick="saveEmpruntToFavorite(currentEmpruntFormData);" class="ui-btn" data-icon="star">Enregistrer l'emprunt</button></li>
 					</ul>
 				</div>
 
 
 				<div class="ui-grid-a ui-responsive">
 					<div class="ui-block-a">
-						<h3 class="ui-bar ui-bar-a" style='text-align:center'>Profil &laquo;&nbsp;échéance constante&nbsp;&raquo;</h3>
+						<h3 class="ui-bar ui-bar-a" style='text-align:center'>Profil échéance constante</h3>
 						<div class="ui-body" id="resultatEcheanceConstante"><p style='text-align:center'><em>Résultats des calculs pour le profil d'amortissement à échéances constantes</em></p></div>
 					</div>
 					<div class="ui-block-b">
-						<h3 class="ui-bar ui-bar-b" style='text-align:center'>Profil &laquo;&nbsp;capital constant&nbsp;&raquo;</h3>
+						<h3 class="ui-bar ui-bar-b" style='text-align:center'>Profil capital constant</h3>
 						<div class="ui-body" id="resultatCapitalConstant"><p style='text-align:center'><em>Résultats des calculs pour le profil d'amortissement à capital constant</em></p></div>
 					</div>
 				</div>

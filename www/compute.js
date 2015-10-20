@@ -19,8 +19,8 @@ function computeTables(currentEmpruntVariation1, currentEmpruntVariation2)
 
 	if (currentEmpruntVariation1.isValid)
 	{
-		var tbl1=Emprunt.echeanceConstante.tableauAmortissement(currentEmpruntVariation1, 400);
-		var tbl2=Emprunt.capitalConstant.tableauAmortissement(currentEmpruntVariation1, 400);
+		var tbl1=Emprunt.echeanceConstante.tableauAmortissement(currentEmpruntVariation1, 360);
+		var tbl2=Emprunt.capitalConstant.tableauAmortissement(currentEmpruntVariation1, 360);
 
 		output += "<div data-role='collapsible' data-theme='a'><h3>" + Emprunt.getEmpruntDescription(currentEmpruntVariation1.capital, currentEmpruntVariation1.taux, currentEmpruntVariation1.duree, currentEmpruntVariation1.periodicite) + ', profil &laquo;&nbsp;échéance constante&nbsp;&raquo;<br>Coût total de l\'emprunt : '+tbl1.coutTotalEmprunt.toFormat(2)+'€</h3>';
 
@@ -33,8 +33,8 @@ function computeTables(currentEmpruntVariation1, currentEmpruntVariation2)
 
 	if (currentEmpruntVariation2.isValid)
 	{
-		var tbl3=Emprunt.capitalConstant.tableauAmortissement(currentEmpruntVariation2, 400);
-		var tbl4=Emprunt.echeanceConstante.tableauAmortissement(currentEmpruntVariation2, 400);
+		var tbl3=Emprunt.capitalConstant.tableauAmortissement(currentEmpruntVariation2, 360);
+		var tbl4=Emprunt.echeanceConstante.tableauAmortissement(currentEmpruntVariation2, 360);
 
 
 		output += '<h2>Mais aussi...</h2>';

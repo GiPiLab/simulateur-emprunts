@@ -51,7 +51,7 @@ function getTaux(forceRefresh)
 
 function tauxToHtml(taux)
 {
-	var output="<table style='font-size:8pt' class='ui-responsive tableTaux' data-role='table'><thead><tr><th></th><th>taux</th><th>prec</th><th>min</th><th>max</th></tr></thead><tbody>";
+	var output="<table style='font-size:8pt' width='100%' class='tableTaux'><thead><tr><th></th><th>taux</th><th>prec</th><th>min</th><th>max</th></tr></thead><tbody>";
 
 	output+="<tr><th style='text-align:center;padding-top:5px' colspan='5'>Eonia ("+taux.eonia.date+")</th></tr>";
 	output+="<tr><td style='text-align:left'>eonia</td><td>"+taux.eonia.current
