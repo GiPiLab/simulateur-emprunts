@@ -7,7 +7,7 @@
 
 - Clone the repository
 
-- `cordova build` into the root of the repository
+- `cordova prepare ; cordova build` into the root of the repository
 
 
 
