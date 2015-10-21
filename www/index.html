@@ -128,18 +128,16 @@ $(document).ready(function(){
 	$( "body>[data-role='panel']" ).panel();
 	getTaux();
 
-	
-//	FastClick.attach(document.body);
-
 	$(document).on("pagecreate",loadTheme());
 
 	$('#listeEmprunts').html(listEmprunts());
 
+	//Gray buttons on change
 	$('#input-capital').on('change',function(){
 		$("#linkPageTableau").prop('disabled',true);
 		$("#saveEmprunt").prop('disabled',true);
 	});
-	
+
 	$('#input-echeance').on('change',function(){
 		$("#linkPageTableau").prop('disabled',true);
 		$("#saveEmprunt").prop('disabled',true);
@@ -155,40 +153,45 @@ $(document).ready(function(){
 		$("#saveEmprunt").prop('disabled',true);
 	});
 	
-	
 	$('#select-periodicite').on('change',function(){
 		$("#linkPageTableau").prop('disabled',true);
 		$("#saveEmprunt").prop('disabled',true);
 	});
+	
+	
+	
+	//Dynamic setting of html5 max values
+	$('#input-capital').attr({"max":Emprunt.MAXCAPITAL});
+	$('#input-echeance').attr({"max":Emprunt.MAXECHEANCE});
+	$('#input-taux').attr({"max":Emprunt.MAXTAUX});
+	$('#input-duree').attr({"max":Emprunt.MAXDUREE});
+
+	
 
 	$('#formEmprunt').validate({
 		rules: {
 			'input-capital': {
 				number:true,
 				min: 0.01,
-				max :999999999999999//,
-				//		require_exactly_from_group:[3,'.empruntdata']
+				max :Emprunt.MAXCAPITAL
 			},
 			'input-echeance':
 			{
 				number:true,
 				min: 0.01,
-				max :999999999999999//,
-				//		require_exactly_from_group:[3,'.empruntdata']
+				max :Emprunt.MAXECHEANCE
 			},
 			'input-taux':
 			{
 				number:true,
 				min:0,
-				max :999999//,
-				//		require_exactly_from_group:[3,'.empruntdata']
+				max :Emprunt.MAXTAUX
 			},
 			'input-duree':
 			{
 				digits:true,
 				min:1,
-				max:1000//,
-				//		require_exactly_from_group:[3,'.empruntdata']
+				max:Emprunt.MAXDUREE
 			}
 		},
 		errorPlacement: function( error, element) {
@@ -217,21 +220,21 @@ $(document).ready(function(){
 
 					<div class="ui-field-contain">
 						<label for="input-capital">Capital :</label>
-						<input class="empruntdata" type="number" name="input-capital" data-mini="true" data-clear-btn="true" id="input-capital" min="0.01" max="999999999999999" step="0.01">
+						<input class="empruntdata" type="number" name="input-capital" data-mini="true" data-clear-btn="true" id="input-capital" min="0.01" step="0.01">
 					</div>
 					<div class="ui-field-contain">
 						<label for="input-echeance">Echéance :</label>
-						<input class="empruntdata" type="number" name="input-echeance" data-mini="true" data-clear-btn="true" id="input-echeance" min="0.01" max="999999999999999" step="0.01">
+						<input class="empruntdata" type="number" name="input-echeance" data-mini="true" data-clear-btn="true" id="input-echeance" min="0.01" step="0.01">
 					</div>
 					<div class="ui-field-contain">
 						<label for="input-taux">Taux annuel (en %) :</label>
-						<input class="empruntdata" type="number" name="input-taux"  data-mini="true" data-clear-btn="true" id="input-taux" min="0" max="999999" step="0.00001">
+						<input class="empruntdata" type="number" name="input-taux"  data-mini="true" data-clear-btn="true" id="input-taux" min="0" step="0.00001">
 					</div>
 
 
 					<div class="ui-field-contain">
 						<label for="input-duree">Durée (en périodes) :</label>
-						<input class="empruntdata" type="number" name="input-duree" data-mini="true" data-clear-btn="true" id="input-duree" min="1" max="1000" step="1">
+						<input class="empruntdata" type="number" name="input-duree" data-mini="true" data-clear-btn="true" id="input-duree" min="1" step="1">
 					</div>
 
 					<div class="ui-field-contain">
@@ -251,7 +254,6 @@ $(document).ready(function(){
 						<li><button id="saveEmprunt" disabled="disabled" onclick="saveEmpruntToFavorite(currentEmpruntFormData);" class="ui-btn" data-icon="star">Enregistrer l'emprunt</button></li>
 					</ul>
 				</div>
-
 
 				<div class="ui-grid-a ui-responsive">
 					<div class="ui-block-a">
@@ -493,7 +495,7 @@ $(document).ready(function(){
 					<a href="#" class="ui-btn ui-btn-inline ui-btn-g" onclick="saveTheme('g');loadTheme();"></a>
 
 					<h3>À propos</h3>
-					<p style='font-size:small'>Simulateur d'emprunts version 0.0.9</p>
+					<p style='font-size:small'>Simulateur d'emprunts version 0.0.10</p>
 					<p style='font-size:small'>©2008--2015 <a href="#" onclick='window.open("http://gipilab.org","_system");'>Laboratoire de Recherche pour le Développement Local</a></p>
 					<a data-mini="true" class="ui-btn ui-btn-icon-left ui-icon-delete" href="#" data-rel="close">Fermer le panneau</a>
 			</div>

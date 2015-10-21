@@ -55,6 +55,14 @@ var Emprunt = {
 		};
 		that.reset();
 	},
+
+
+	/*MAXIMA*/
+	MAXDUREE:2000,
+	MAXTAUX:999999,
+	MAXECHEANCE:999999999999999,
+	MAXCAPITAL:999999999999999,
+
 	periodiciteToString: function(periodicite)
 	{
 		if (periodicite === undefined || periodicite === null)
@@ -193,6 +201,10 @@ var Emprunt = {
 			{
 				throw new Error('Missing arguments !');
 			}
+			if(tauxAnnuel.isZero())
+			{
+				return capital.dividedBy(echeance).round(Decimal.ROUND_UP);
+			}
 			var ip = tauxAnnuel.dividedBy(periodicite);
 			var denum = ip.times(capital).minus(echeance);
 			var tmp1 = echeance.dividedBy(denum).neg().ln();
@@ -204,6 +216,10 @@ var Emprunt = {
 			if (duree === undefined || tauxAnnuel === undefined || echeance === undefined || periodicite === undefined)
 			{
 				throw new Error('Missing arguments !');
+			}
+			if(tauxAnnuel.isZero())
+			{
+				return echeance.times(duree);
 			}
 			var ip = tauxAnnuel.dividedBy(periodicite);
 			var puissance = ip.plus(Decimal.ONE).pow(duree);
@@ -406,6 +422,10 @@ var Emprunt = {
 			if (duree === undefined || echeance === undefined || tauxAnnuel === undefined || periodicite === undefined)
 			{
 				throw new Error('Missing arguments !');
+			}
+			if(tauxAnnuel.isZero())
+			{
+				return echeance.times(duree);
 			}
 			var ip = tauxAnnuel.dividedBy(periodicite);
 			var num = echeance.times(duree);

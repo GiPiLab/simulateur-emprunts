@@ -175,6 +175,7 @@ function computeMissing(empruntVar1, empruntVar2, empruntFormData)
 		else
 		{
 			res += "<div class='resultat'>pas de résultat</div>";
+			console.log(echeanceConstante.toString());
 		}
 		$('#resultatEcheanceConstante').html(res);
 
@@ -190,6 +191,7 @@ function computeMissing(empruntVar1, empruntVar2, empruntFormData)
 		else
 		{
 			res += "<div class='resultat'>pas de résultat</div>";
+			console.log(echeanceCapitalConstant.toString());
 		}
 
 		$('#resultatCapitalConstant').html(res);
@@ -227,12 +229,21 @@ function computeMissing(empruntVar1, empruntVar2, empruntFormData)
 		{
 			res += "<div class='resultat'>" + Emprunt.formatDureeEmprunt(dureeEcheanceConstante, periodicite) + '</div>';
 			empruntVar1.duree = dureeEcheanceConstante;
-			empruntVar1.isValid = true;
+			if(dureeEcheanceConstante.lessThan(Emprunt.MAXDUREE))
+			{
+				empruntVar1.isValid = true;			
+			}
+			else
+			{
+				res+="<p style='text-align:center;font-size:small'>(durée trop importante, le tableau ne sera pas affiché)</p>";
+			}
 			$('#linkPageTableau').prop('disabled', false);
-
 		}
 		else
+		{
 			res += "<div class='resultat'>pas de résultat</div>";
+			console.log(dureeEcheanceConstante.toString());
+		}
 
 
 		$('#resultatEcheanceConstante').html(res);
@@ -247,12 +258,22 @@ function computeMissing(empruntVar1, empruntVar2, empruntFormData)
 			if (!dureeCapitalConstant.equals(dureeEcheanceConstante))
 			{
 				empruntVar2.duree = dureeCapitalConstant;
-				empruntVar2.isValid = true;
+				if(dureeCapitalConstant.lessThan(Emprunt.MAXDUREE))
+				{
+					empruntVar2.isValid = true;
+				}
+				else
+				{
+					res+="<p style='text-align:center;font-size:small'>(durée trop importante, le tableau ne sera pas affiché)</p>";
+				}
 			}
 			$('#linkPageTableau').prop('disabled', false);
 		}
 		else
+		{
 			res += "<div class='resultat'>pas de résultat</div>";
+			console.log(dureeCapitalConstant.toString());
+		}
 
 		$('#resultatCapitalConstant').html(res);
 	}
@@ -298,6 +319,7 @@ function computeMissing(empruntVar1, empruntVar2, empruntFormData)
 		else
 		{
 			res += "<div class='resultat'>pas de résultat</div>";
+			console.log(tauxEcheanceConstante.toString());
 		}
 		$('#resultatEcheanceConstante').html(res);
 
@@ -319,6 +341,7 @@ function computeMissing(empruntVar1, empruntVar2, empruntFormData)
 		else
 		{
 			res += "<div class='resultat'>pas de résultat</div>";
+			console.log(tauxCapitalConstant.toString());
 		}
 		$('#resultatCapitalConstant').html(res);
 		if(typeof ActivityIndicator!=="undefined")
@@ -360,6 +383,7 @@ function computeMissing(empruntVar1, empruntVar2, empruntFormData)
 		else
 		{
 			res += "<div class='resultat'>pas de résultat</div>";
+			console.log(capitalEcheanceConstante.toString());
 		}
 		$('#resultatEcheanceConstante').html(res);
 
@@ -381,6 +405,7 @@ function computeMissing(empruntVar1, empruntVar2, empruntFormData)
 		else
 		{
 			res += "<div class='resultat'>pas de résultat</div>";
+			console.log(capitalCapitalConstant.toString());
 		}
 		$('#resultatCapitalConstant').html(res);
 	}
