@@ -128,7 +128,18 @@ $(document).ready(function(){
 	$( "body>[data-role='panel']" ).panel();
 	getTaux();
 
-	$(document).on("pagecreate",loadTheme());
+
+
+	$(document).on("pagecreate",function(){
+		
+		loadTheme();
+		//Fix panel scrolling
+		$("[data-role=panel]").one("panelbeforeopen", function () {
+			var height = $.mobile.pageContainer.pagecontainer("getActivePage").outerHeight();
+			$(".ui-panel-wrapper").css("height", height + 1);
+		});
+	}
+		);
 
 	$('#listeEmprunts').html(listEmprunts());
 
@@ -479,7 +490,7 @@ $(document).ready(function(){
 
 
 
-			<div data-display="overlay" data-role="panel"  id="optionPanel" class="ui-page-theme-a">
+			<div  data-role="panel" data-position-fixed="true" id="optionPanel" class="ui-page-theme-a">
 					<h3>Derniers taux</h3>
 
 					<div id="divTaux" style="text-align:center"></div>
