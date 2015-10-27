@@ -56,7 +56,7 @@ function getDateAndComputeTables(currentEmpruntVariation1, currentEmpruntVariati
 	}
 	else
 	{
-		//TODO : Add a datepicker like dialog for non mobile platforms
+		console.log("using default date");
 		computeTables(currentEmpruntVariation1,currentEmpruntVariation2,new Date());
 	}
 }

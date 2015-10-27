@@ -218,6 +218,12 @@ $(document).ready(function(){
 		</script>
 		<div data-role="page" id="pageEmprunt">
 
+			<div data-role="popup" id="popupGetDate" data-dismissible="false" class="ui-content">
+				<label for="inputDateDebut">Date de la première échéance</label>
+				<input type="date" id="inputDateDebut" name="inputDateDebut">
+				<input type="button" value="Ok" onclick="var date=$('#inputDateDebut').val();if(date.length===0)date=new Date();computeTables(currentEmpruntVariation1,currentEmpruntVariation2,date);">
+			</div>
+
 			<div data-role="header" data-position="fixed">
 				<h1>Nouvel emprunt</h1>
 	<a href="#" onclick="navigator.app.exitApp();" data-icon="power" data-iconpos="notext" class="ui-btn-right">Quitter</a>
@@ -260,7 +266,7 @@ $(document).ready(function(){
 				</form>
 				<div data-role="navbar">
 					<ul>
-						<li><button id="linkPageTableau" disabled="disabled" onclick="getDateAndComputeTables(currentEmpruntVariation1,currentEmpruntVariation2);" class="ui-btn" data-icon="grid">Tableaux d'amortissement</button></li>
+						<li><button id="linkPageTableau" disabled="disabled" onclick="if(typeof datePicker!=='object'){$('#popupGetDate').popup('open');}else{getDateAndComputeTables(currentEmpruntVariation1,currentEmpruntVariation2);}" class="ui-btn" data-icon="grid">Tableaux d'amortissement</button></li>
 						<li><button id="saveEmprunt" disabled="disabled" onclick="saveEmpruntToFavorite(currentEmpruntFormData);" class="ui-btn" data-icon="star">Enregistrer l'emprunt</button></li>
 					</ul>
 				</div>
