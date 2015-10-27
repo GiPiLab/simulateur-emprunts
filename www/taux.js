@@ -49,7 +49,6 @@ function getTaux(forceRefresh)
 	{
 		$.ajax({type:"GET", url:"http://gipilab.org/progs/taux/getTauxJSON.php",success:function(result){
 
-			console.log("Refreshing taux");
 			try
 			{
 				var data=JSON.parse(result);
@@ -82,7 +81,6 @@ function getTaux(forceRefresh)
 		$("#divTaux").html(tauxToHtml(JSON.parse(result)));
 		$("#divTaux").trigger("create");
 		$("#optionPanel").trigger("updatelayout");
-		console.log("No refreshing taux, using cache");
 	}
 		
 }

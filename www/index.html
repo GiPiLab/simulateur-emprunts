@@ -49,7 +49,7 @@
 		<meta charset="utf-8">
 		<link rel="stylesheet" href="libs/theme_thib1/thib1.min.css">
 		<link rel="stylesheet" href="libs/theme_thib1/jquery.mobile.icons.min.css">
-		<link rel="stylesheet" href="libs/jquery.mobile.custom.structure.min.css">
+		<link rel="stylesheet" href="libs/jquery.mobile.structure-1.4.5.min.css">
 		
 		
 		<style>
@@ -83,9 +83,8 @@ table.tableTaux td, table.tableTaux th{
 }	
 		</style>
 
-		<!--		<script src="libs/fastclick.min.js"></script>-->
 		<script src="libs/jquery-2.1.4.min.js"></script>
-		<script src="libs/jquery.mobile.custom.min.js"></script>
+		<script src="libs/jquery.mobile-1.4.5.min.js"></script>
 		<script src="libs/jquery.validate.min.js"></script>
 		<script src="libs/jquery.validate-messages_FR_thib.min.js"></script>
 		<script src="libs/decimal.min.js"></script>
@@ -128,8 +127,7 @@ $(document).ready(function(){
 	$( "body>[data-role='panel']" ).panel();
 	getTaux();
 
-
-
+	loadTheme();
 	$(document).on("pagecreate",function(){
 		
 		loadTheme();
@@ -142,6 +140,7 @@ $(document).ready(function(){
 		);
 
 	$('#listeEmprunts').html(listEmprunts());
+
 
 	//Gray buttons on change
 	$('#input-capital').on('change',function(){
@@ -261,7 +260,7 @@ $(document).ready(function(){
 				</form>
 				<div data-role="navbar">
 					<ul>
-						<li><button id="linkPageTableau" disabled="disabled" onclick="computeTables(currentEmpruntVariation1,currentEmpruntVariation2);" class="ui-btn" data-icon="grid">Tableaux d'amortissement</button></li>
+						<li><button id="linkPageTableau" disabled="disabled" onclick="getDateAndComputeTables(currentEmpruntVariation1,currentEmpruntVariation2);" class="ui-btn" data-icon="grid">Tableaux d'amortissement</button></li>
 						<li><button id="saveEmprunt" disabled="disabled" onclick="saveEmpruntToFavorite(currentEmpruntFormData);" class="ui-btn" data-icon="star">Enregistrer l'emprunt</button></li>
 					</ul>
 				</div>
@@ -506,7 +505,7 @@ $(document).ready(function(){
 					<a href="#" class="ui-btn ui-btn-inline ui-btn-g" onclick="saveTheme('g');loadTheme();"></a>
 
 					<h3>À propos</h3>
-					<p style='font-size:small'>Simulateur d'emprunts version 0.0.10</p>
+					<p style='font-size:small'>Simulateur d'emprunts version 0.0.11</p>
 					<p style='font-size:small'>©2008--2015 <a href="#" onclick='window.open("http://gipilab.org","_system");'>Laboratoire de Recherche pour le Développement Local</a></p>
 					<a data-mini="true" class="ui-btn ui-btn-icon-left ui-icon-delete" href="#" data-rel="close">Fermer le panneau</a>
 			</div>

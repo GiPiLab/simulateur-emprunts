@@ -38,7 +38,32 @@
 'use strict';
 
 
-function computeTables(currentEmpruntVariation1, currentEmpruntVariation2)
+
+function getDateAndComputeTables(currentEmpruntVariation1, currentEmpruntVariation2)
+{
+	if (currentEmpruntVariation1 === undefined || currentEmpruntVariation2 === undefined)
+	{
+		throw new Error('Missing arguments');
+	}
+
+	if(typeof datePicker==="object")
+	{
+		datePicker.show({date:new Date(),mode:"date",titleText:"Date de première échéance"},function(date){
+			computeTables(currentEmpruntVariation1,currentEmpruntVariation2,date);
+		},function(error){
+			computeTables(currentEmpruntVariation1,currentEmpruntVariation2,new Date());
+		});
+	}
+	else
+	{
+		//TODO : Add a datepicker like dialog for non mobile platforms
+		computeTables(currentEmpruntVariation1,currentEmpruntVariation2,new Date());
+	}
+}
+
+
+
+function computeTables(currentEmpruntVariation1, currentEmpruntVariation2, dateDebut)
 {
 	if (currentEmpruntVariation1 === undefined || currentEmpruntVariation2 === undefined)
 	{
@@ -48,17 +73,18 @@ function computeTables(currentEmpruntVariation1, currentEmpruntVariation2)
 	{
 		throw new Error('Invalid Emprunt');
 	}
+
 	var output = '';
 
 
 	if(typeof ActivityIndicator!=="undefined")
 		ActivityIndicator.show("Patienter...");
 
-
+		
 	if (currentEmpruntVariation1.isValid)
 	{
-		var tbl1=Emprunt.echeanceConstante.tableauAmortissement(currentEmpruntVariation1, 360);
-		var tbl2=Emprunt.capitalConstant.tableauAmortissement(currentEmpruntVariation1, 360);
+		var tbl1=Emprunt.echeanceConstante.tableauAmortissement(currentEmpruntVariation1, 360,dateDebut);
+		var tbl2=Emprunt.capitalConstant.tableauAmortissement(currentEmpruntVariation1, 360,dateDebut);
 
 		output += "<div data-role='collapsible' data-theme='a'><h3>" + Emprunt.getEmpruntDescription(currentEmpruntVariation1.capital, currentEmpruntVariation1.taux, currentEmpruntVariation1.duree, currentEmpruntVariation1.periodicite) + ', profil &laquo;&nbsp;échéance constante&nbsp;&raquo;<br>Coût total de l\'emprunt : '+tbl1.coutTotalEmprunt.toFormat(2)+'€</h3>';
 
@@ -71,8 +97,8 @@ function computeTables(currentEmpruntVariation1, currentEmpruntVariation2)
 
 	if (currentEmpruntVariation2.isValid)
 	{
-		var tbl3=Emprunt.capitalConstant.tableauAmortissement(currentEmpruntVariation2, 360);
-		var tbl4=Emprunt.echeanceConstante.tableauAmortissement(currentEmpruntVariation2, 360);
+		var tbl3=Emprunt.capitalConstant.tableauAmortissement(currentEmpruntVariation2, 360,dateDebut);
+		var tbl4=Emprunt.echeanceConstante.tableauAmortissement(currentEmpruntVariation2, 360,dateDebut);
 
 
 		output += '<h2>Mais aussi...</h2>';

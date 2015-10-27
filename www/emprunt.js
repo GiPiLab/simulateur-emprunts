@@ -302,9 +302,9 @@ var Emprunt = {
 			else return tauxAnnuel;
 		},
 
-		tableauAmortissement: function(emprunt, breakpoint)
+		tableauAmortissement: function(emprunt, breakpoint,dateDebut)
 		{
-			if (emprunt === undefined || breakpoint === undefined)
+			if (emprunt === undefined || breakpoint === undefined || dateDebut === undefined)
 			{
 				throw new Error('Missing arguments');
 			}
@@ -332,7 +332,9 @@ var Emprunt = {
 			var sumIpe = new Decimal(0);
 			var sumEch = new Decimal(0);
 
-			var date = Date.today();
+//			var date = Date.today();
+
+			var date=new Date(dateDebut);
 
 			var per = emprunt.periodicite.toNumber();
 
@@ -445,9 +447,9 @@ var Emprunt = {
 			return i.times(periodicite);
 		},
 
-		tableauAmortissement: function(emprunt, breakpoint)
+		tableauAmortissement: function(emprunt, breakpoint, dateDebut)
 		{
-			if (emprunt === undefined || breakpoint === undefined)
+			if (emprunt === undefined || breakpoint === undefined || dateDebut === undefined)
 			{
 				throw new Error('Missing arguments');
 			}
@@ -474,7 +476,7 @@ var Emprunt = {
 			var sumIpe = new Decimal(0);
 			var sumEch = new Decimal(0);
 
-			var date = Date.today();
+			var date = new Date(dateDebut);
 
 
 			var per = emprunt.periodicite.toNumber();
