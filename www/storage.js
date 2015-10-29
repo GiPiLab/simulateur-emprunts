@@ -266,6 +266,7 @@ function listTables()
 			}
 			else
 			{
+				console.log(emp.modeCalculTableau);
 				throw new Error("Invalid modeCalculTableau");
 			}
 		}

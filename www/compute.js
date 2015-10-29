@@ -167,7 +167,7 @@ function computeTables(currentEmpruntVariation1, currentEmpruntVariation2, dateD
 	
 	$('#btnSaveTbl1').click(function(){saveTable(currentEmpruntVariation1,dateDebut,"echeanceConstante");});
 	$('#btnSaveTbl2').click(function(){saveTable(currentEmpruntVariation1,dateDebut,"capitalConstant");});
-	$('#btnSaveTbl3').click(function(){saveTable(currentEmpruntVariation2,dateDebut,"capitalConstante");});
+	$('#btnSaveTbl3').click(function(){saveTable(currentEmpruntVariation2,dateDebut,"capitalConstant");});
 	$('#btnSaveTbl4').click(function(){saveTable(currentEmpruntVariation2,dateDebut,"echeanceConstante");});
 
 	$.mobile.pageContainer.pagecontainer('change', '#pageTableaux', {transition: 'none'});
