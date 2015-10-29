@@ -69,6 +69,10 @@ label.error {
 	white-space:normal;
 }
 
+.ui-listview > li > a.ui-btn{
+	white-space:normal;
+}
+
 div.resultat{
 	text-align:center;
 	font-size:2em;
@@ -140,6 +144,7 @@ $(document).ready(function(){
 		);
 
 	$('#listeEmprunts').html(listEmprunts());
+	$('#listeTableaux').html(listTables());
 
 
 	//Gray buttons on change
@@ -266,7 +271,7 @@ $(document).ready(function(){
 				</form>
 				<div data-role="navbar">
 					<ul>
-						<li><button id="linkPageTableau" disabled="disabled" onclick="if(typeof datePicker!=='object'){$('#popupGetDate').popup('open');}else{getDateAndComputeTables(currentEmpruntVariation1,currentEmpruntVariation2);}" class="ui-btn" data-icon="grid">Tableaux d'amortissement</button></li>
+						<li><button id="linkPageTableau" disabled="disabled" onclick="if(typeof datePicker!=='object'){$('#popupGetDate').popup('open');}else{getDateAndComputeTables(currentEmpruntVariation1,currentEmpruntVariation2);}" class="ui-btn" data-icon="grid">Tableau(x) d'amortissement</button></li>
 						<li><button id="saveEmprunt" disabled="disabled" onclick="saveEmpruntToFavorite(currentEmpruntFormData);" class="ui-btn" data-icon="star">Enregistrer l'emprunt</button></li>
 					</ul>
 				</div>
@@ -288,7 +293,8 @@ $(document).ready(function(){
 					<ul>
 						<li><a href="#pagePresentation" data-icon="info" >Présentation</a></li>
 						<li><a href="#pageEmprunt" data-icon="edit" class='ui-btn-active ui-state-persist'>Nouvel emprunt</a></li>
-						<li><a href="#pageMesEmprunts" data-icon="star">Mes emprunts</a></li>
+						<li><a href="#pageMesCalculs" data-icon="star">Mes calculs</a></li>
+						<li><a href="#pageMesTableaux" data-icon="calendar" >Mes tableaux</a></li>
 					</ul>
 				</div>
 			</div>
@@ -297,13 +303,13 @@ $(document).ready(function(){
 
 		<div data-role="page" id="pageTableaux">
 			<div data-role="header" data-position="fixed">
-				<h1>Tableaux d'amortissement</h1>
+				<h1>Tableau(x) d'amortissement</h1>
 	   <a href="#" onclick="navigator.app.exitApp();" data-icon="power" data-iconpos="notext" class="ui-btn-right">Quitter</a>
 	<a href='#optionPanel' data-icon="bars" data-iconpos="notext" class="ui-btn-left"></a>
 			</div>
 
 			<div data-role="main" class="ui-content">
-				<div id="tableau">
+				<div id="divTableaux">
 				</div>
 			</div>
 			<div data-role="footer" data-position="fixed">
@@ -311,7 +317,8 @@ $(document).ready(function(){
 					<ul>
 						<li><a href="#pagePresentation" data-icon="info" >Présentation</a></li>
 						<li><a href="#pageEmprunt" data-icon="edit">Nouvel emprunt</a></li>
-						<li><a href="#pageMesEmprunts" data-icon="star">Mes emprunts</a></li>
+						<li><a href="#pageMesCalculs" data-icon="star">Mes calculs</a></li>
+						<li><a href="#pageMesTableaux" data-icon="calendar" >Mes tableaux</a></li>
 					</ul>
 				</div>
 			</div>
@@ -319,9 +326,34 @@ $(document).ready(function(){
 
 		</div>
 		
-		<div data-role="page" id="pageMesEmprunts">
+		<div data-role="page" id="pageMesTableaux">
 			<div data-role="header" data-position="fixed">
-								<h1>Mes emprunts</h1>
+								<h1>Mes tableaux</h1>
+				<a href="#" onclick="navigator.app.exitApp();" data-icon="power" data-iconpos="notext" class="ui-btn-right">Quitter</a>
+	<a href='#optionPanel' data-icon="bars" data-iconpos="notext" class="ui-btn-left"></a>
+				
+				</div>
+
+			<div data-role="main" class="ui-content">
+				<div data-role="content" id="listeTableaux">
+				</div>
+			</div>
+			<div data-role="footer" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li><a href="#pagePresentation" data-icon="info" >Présentation</a></li>
+						<li><a href="#pageEmprunt" data-icon="edit">Nouvel emprunt</a></li>
+						<li><a href="#pageMesCalculs" data-icon="star">Mes calculs</a></li>
+						<li><a href="#pageMesTableaux" data-icon="calendar" class='ui-btn-active ui-state-persist' >Mes tableaux</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		
+		
+		<div data-role="page" id="pageMesCalculs">
+			<div data-role="header" data-position="fixed">
+								<h1>Mes calculs</h1>
 				<a href="#" onclick="navigator.app.exitApp();" data-icon="power" data-iconpos="notext" class="ui-btn-right">Quitter</a>
 	<a href='#optionPanel' data-icon="bars" data-iconpos="notext" class="ui-btn-left"></a>
 				
@@ -336,7 +368,8 @@ $(document).ready(function(){
 					<ul>
 						<li><a href="#pagePresentation" data-icon="info" >Présentation</a></li>
 						<li><a href="#pageEmprunt" data-icon="edit">Nouvel emprunt</a></li>
-						<li><a href="#pageMesEmprunts" data-icon="star" class='ui-btn-active ui-state-persist'>Mes emprunts</a></li>
+						<li><a href="#pageMesCalculs" data-icon="star" class='ui-btn-active ui-state-persist'>Mes calculs</a></li>
+						<li><a href="#pageMesTableaux" data-icon="calendar" >Mes tableaux</a></li>
 					</ul>
 				</div>
 			</div>
@@ -487,7 +520,8 @@ $(document).ready(function(){
 					<ul>
 						<li><a href="#pagePresentation" data-icon="info" class='ui-btn-active ui-state-persist' >Présentation</a></li>
 						<li><a href="#pageEmprunt" data-icon="edit">Nouvel emprunt</a></li>
-						<li><a href="#pageMesEmprunts" data-icon="star" >Mes emprunts</a></li>
+						<li><a href="#pageMesCalculs" data-icon="star" >Mes calculs</a></li>
+						<li><a href="#pageMesTableaux" data-icon="calendar" >Mes tableaux</a></li>
 					</ul>
 				</div>
 			</div>

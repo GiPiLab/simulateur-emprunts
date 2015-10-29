@@ -56,7 +56,6 @@ var Emprunt = {
 		that.reset();
 	},
 
-
 	/*MAXIMA*/
 	MAXDUREE:2000,
 	MAXTAUX:999999,
@@ -87,9 +86,15 @@ var Emprunt = {
 		{
 			throw new Error('Missing parameters');
 		}
+
 		var text;
 		var dur = duree.toString();
-		var per = periodicite.toNumber();
+		if(typeof periodicite==="object")
+			var per = periodicite.toNumber();
+		else
+		{
+			var per=parseInt(periodicite);
+		}
 		switch (per)
 		{
 			case 12: text = dur + ' mois';
@@ -118,6 +123,14 @@ var Emprunt = {
 		if (capital === undefined || taux === undefined || duree === undefined || periodicite === undefined)
 		{
 			throw new Error('Missing parameters');
+		}
+		if(typeof capital!=="object")
+		{
+			var capital=new Decimal(capital);
+		}
+		if(typeof taux!=="object")
+		{
+			var taux=new Decimal(taux);
 		}
 		return 'Emprunt de '+ capital.toFormat(2) + '€ à '+ taux.times(100).toFormat(3) + '% pendant '+ Emprunt.formatDureeEmprunt(duree, periodicite);
 	},

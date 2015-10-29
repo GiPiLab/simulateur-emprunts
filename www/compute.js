@@ -62,6 +62,57 @@ function getDateAndComputeTables(currentEmpruntVariation1, currentEmpruntVariati
 }
 
 
+function computeSavedTable(savedTable)
+{
+	if(savedTable===undefined)
+	{
+		throw new Error('Missing arguments');
+	}
+	if(savedTable.empruntData===undefined ||savedTable.dateDebut===undefined || savedTable.modeCalculTableau===undefined)
+	{
+		throw new Error("Bad table type");
+	}
+	
+	var output = '';
+
+
+	if(typeof ActivityIndicator!=="undefined")
+		ActivityIndicator.show("Patienter...");
+		
+
+	if(savedTable.modeCalculTableau==="echeanceConstante")
+	{
+		var tbl1=Emprunt.echeanceConstante.tableauAmortissement(savedTable.empruntData, 360,savedTable.dateDebut);
+		output += "<h3 class='ui-bar ui-bar-a'>" + Emprunt.getEmpruntDescription(savedTable.empruntData.capital, savedTable.empruntData.taux, savedTable.empruntData.duree, savedTable.empruntData.periodicite) + ', profil &laquo;&nbsp;échéance constante&nbsp;&raquo;</h3>';
+		output+="<div class='ui-body'>"+tbl1.tableauHtml+"</div>";
+
+	}
+
+	else if(savedTable.modeCalculTableau==="capitalConstant")
+	{
+		var tbl1=Emprunt.capitalConstant.tableauAmortissement(savedTable.empruntData, 360,savedTable.dateDebut);
+		output += "<h3 class='ui-bar ui-bar-b'>" + Emprunt.getEmpruntDescription(savedTable.empruntData.capital, savedTable.empruntData.taux, savedTable.empruntData.duree, savedTable.empruntData.periodicite) + ', profil &laquo;&nbsp;capital constant&nbsp;&raquo;</h3>';
+		output+="<div class='ui-body'>"+tbl1.tableauHtml+"</div>";
+	}
+
+	else
+	{
+		if(typeof ActivityIndicator!=="undefined")	
+			ActivityIndicator.hide();
+		throw new Error("Invalid modeCalculTableau");
+	}
+
+	$('#divTableaux').html(output);
+	$('#divTableaux').trigger('create');
+	
+	$.mobile.pageContainer.pagecontainer('change', '#pageTableaux', {transition: 'none'});
+
+	if(typeof ActivityIndicator!=="undefined")	
+		ActivityIndicator.hide();
+
+}
+
+
 
 function computeTables(currentEmpruntVariation1, currentEmpruntVariation2, dateDebut)
 {
@@ -88,11 +139,11 @@ function computeTables(currentEmpruntVariation1, currentEmpruntVariation2, dateD
 
 		output += "<div data-role='collapsible' data-theme='a'><h3>" + Emprunt.getEmpruntDescription(currentEmpruntVariation1.capital, currentEmpruntVariation1.taux, currentEmpruntVariation1.duree, currentEmpruntVariation1.periodicite) + ', profil &laquo;&nbsp;échéance constante&nbsp;&raquo;<br>Coût total de l\'emprunt : '+tbl1.coutTotalEmprunt.toFormat(2)+'€</h3>';
 
-		output += "<div>" + tbl1.tableauHtml + '</div></div>';
+		output += "<div>" + tbl1.tableauHtml + "</div><a href='#' class='ui-btn' id='btnSaveTbl1'>Mémoriser</a></div>";
 
 		output += "<div data-role='collapsible' data-theme='b'><h3>" + Emprunt.getEmpruntDescription(currentEmpruntVariation1.capital, currentEmpruntVariation1.taux, currentEmpruntVariation1.duree, currentEmpruntVariation1.periodicite) + ', profil &laquo;&nbsp;capital constant&nbsp;&raquo;<br>Coût total de l\'emprunt : '+tbl2.coutTotalEmprunt.toFormat(2)+'€</h3>';
 
-		output += "<div>" + tbl2.tableauHtml + '</div></div>';
+		output += "<div>" + tbl2.tableauHtml + "</div><a href='#' class='ui-btn' id='btnSaveTbl2'>Mémoriser</a></div>";
 	}
 
 	if (currentEmpruntVariation2.isValid)
@@ -104,14 +155,20 @@ function computeTables(currentEmpruntVariation1, currentEmpruntVariation2, dateD
 		output += '<h2>Mais aussi...</h2>';
 		output += "<div data-role='collapsible' data-theme='b'><h3>" + Emprunt.getEmpruntDescription(currentEmpruntVariation2.capital, currentEmpruntVariation2.taux, currentEmpruntVariation2.duree, currentEmpruntVariation2.periodicite) + ', profil &laquo;&nbsp;capital constant&nbsp;&raquo;<br>Coût total de l\'emprunt : '+tbl3.coutTotalEmprunt.toFormat(2)+'€</h3>';
 
-		output += "<div>" + tbl3.tableauHtml + '</div></div>';
+		output += "<div>" + tbl3.tableauHtml + "</div><a href='#' class='ui-btn' id='btnSaveTbl3'>Mémoriser</a></div>";
 		output += "<div data-role='collapsible' data-theme='a'><h3>" + Emprunt.getEmpruntDescription(currentEmpruntVariation2.capital, currentEmpruntVariation2.taux, currentEmpruntVariation2.duree, currentEmpruntVariation2.periodicite) + ', profil &laquo;&nbsp;échéance constante&nbsp;&raquo;<br>Coût total de l\'emprunt : '+tbl4.coutTotalEmprunt.toFormat(2)+'€</h3>';
 
-		output += "<div>" + tbl4.tableauHtml + '</div>';
+		output += "<div>" + tbl3.tableauHtml + "</div><a href='#' class='ui-btn' id='btnSaveTbl4'>Mémoriser</a></div>";
 
 	}
-	$('#tableau').html(output);
-	$('#tableau').trigger('create');
+
+	$('#divTableaux').html(output);
+	$('#divTableaux').trigger('create');
+	
+	$('#btnSaveTbl1').click(function(){saveTable(currentEmpruntVariation1,dateDebut,"echeanceConstante");});
+	$('#btnSaveTbl2').click(function(){saveTable(currentEmpruntVariation1,dateDebut,"capitalConstant");});
+	$('#btnSaveTbl3').click(function(){saveTable(currentEmpruntVariation2,dateDebut,"capitalConstante");});
+	$('#btnSaveTbl4').click(function(){saveTable(currentEmpruntVariation2,dateDebut,"echeanceConstante");});
 
 	$.mobile.pageContainer.pagecontainer('change', '#pageTableaux', {transition: 'none'});
 	if(typeof ActivityIndicator!=="undefined")	

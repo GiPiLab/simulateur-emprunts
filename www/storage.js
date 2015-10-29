@@ -72,7 +72,7 @@ function saveEmpruntToFavorite(emp)
 
 	$('#listeEmprunts').html(listEmprunts());
 	$('#listeEmprunts').trigger('create');
-	$.mobile.pageContainer.pagecontainer('change', '#pageMesEmprunts', {transition: 'none'});
+	$.mobile.pageContainer.pagecontainer('change', '#pageMesCalculs', {transition: 'none'});
 }
 
 function loadEmprunt(i)
@@ -192,6 +192,153 @@ function listEmprunts()
 	return out;
 }
 
+
+
+/*Stockage des tableaux d'amortissement*/
+
+function saveTable(emp,dateDebut,modeCalculTableau)
+{
+	if (emp === undefined || dateDebut===undefined || modeCalculTableau===undefined)
+	{
+		throw new Error('Missing parameters !');
+	}
+
+	if (emp.capital === undefined || emp.echeance === undefined || emp.duree === undefined || emp.periodicite === undefined || emp.taux === undefined)
+	{
+		throw new TypeError('Invalid object found instead of empruntData !');
+	}
+
+	var tblToSave={empruntData:emp,dateDebut:dateDebut,modeCalculTableau:modeCalculTableau};
+
+	if(!window.localStorage)
+	{
+		alert("Stockage local non disponible, sauvegarde impossible");
+		return;
+	}
+
+	if (window.localStorage.simulateurEmpruntslisteTableaux)
+	{
+		var listTbl = JSON.parse(window.localStorage.getItem('simulateurEmpruntslisteTableaux'));
+		listTbl.push(tblToSave);
+		window.localStorage.setItem('simulateurEmpruntslisteTableaux', JSON.stringify(listTbl));
+	}
+	else
+	{
+		var listTbl = [tblToSave];
+		window.localStorage.setItem('simulateurEmpruntslisteTableaux', JSON.stringify(listTbl));
+	}
+	$('#listeTableaux').html(listTables());
+	$('#listeTableaux').trigger('create');
+	alert("Tableau d'amortissement mémorisé");
+
+}
+
+function listTables()
+{
+	var out = '';
+	if(!window.localStorage)
+	{
+		alert("Stockage local non disponible, chargement impossible");
+		return;
+	}
+	if (window.localStorage.simulateurEmpruntslisteTableaux)
+	{
+		var listEmp = JSON.parse(window.localStorage.getItem('simulateurEmpruntslisteTableaux'));
+
+		out += "<ul data-role='listview' data-split-icon='delete'>";
+
+		for (var i = 0; i < listEmp.length; i++)
+		{
+			var emp = listEmp[i];
+			if (emp.empruntData.capital === undefined || emp.empruntData.echeance === undefined || emp.empruntData.duree === undefined || emp.empruntData.periodicite === undefined || emp.empruntData.taux === undefined)
+			{
+				throw new TypeError('Invalid object found instead of empruntData !');
+			}
+			var debut=new Date(emp.dateDebut).toString("dd-MM-yyyy");
+			var description = Emprunt.getEmpruntDescription(emp.empruntData.capital, emp.empruntData.taux, emp.empruntData.duree, emp.empruntData.periodicite);
+			if(emp.modeCalculTableau==="echeanceConstante")
+			{
+				out += "<li data-theme='a' style='margin:1em'><a href='#' onclick='loadTable(" + i + ");'>" + description + ", profil &laquo; échéance constante &raquo;, première échéance le : "+debut+"</a><a href='#' onclick='removeTable(" + i + ");$(\"#listeTableaux\").html(listTables());$(\"#listeTableaux\").trigger(\"create\");'>Supprimer</a></li>";
+			}
+			else if(emp.modeCalculTableau==="capitalConstant")
+			{
+				out += "<li data-theme='b' style='margin:1em'><a href='#' onclick='loadTable(" + i + ");'>" + description + ", profil &laquo; capital constant &raquo;, première échéance le : "+debut+"</a><a href='#' onclick='removeTable(" + i + ");$(\"#listeTableaux\").html(listTables());$(\"#listeTableaux\").trigger(\"create\");'>Supprimer</a></li>";
+			}
+			else
+			{
+				throw new Error("Invalid modeCalculTableau");
+			}
+		}
+
+		out += '</ul>';
+	}
+	return out;
+}
+
+
+function removeTable(i)
+{
+	if (i === undefined)
+	{
+		throw new Error('undefined index to remove');
+	}
+	if(!window.localStorage)
+	{
+		alert("Stockage local non disponible, chargement impossible");
+		return;
+	}
+	var listEmp = JSON.parse(window.localStorage.getItem('simulateurEmpruntslisteTableaux'));
+
+	if (i >= 0 && i < listEmp.length)
+	{
+		var emp = listEmp[i];
+		if (emp.empruntData.capital === undefined || emp.empruntData.echeance === undefined || emp.empruntData.duree === undefined || emp.empruntData.periodicite === undefined || emp.empruntData.taux === undefined)
+		{
+			throw new TypeError('Invalid object found instead of empruntData !');
+		}
+		listEmp.splice(i, 1);
+		window.localStorage.setItem('simulateurEmpruntslisteTableaux', JSON.stringify(listEmp));
+	}
+	else
+	{
+		throw new RangeError('Invalid index');
+	}
+}
+
+function loadTable(i)
+{
+	if (i === undefined)
+	{
+		throw new Error('undefined index to load');
+	}
+	if(!window.localStorage)
+	{
+		alert("Stockage local non disponible, chargement impossible");
+		return;
+	}
+	var listEmp = JSON.parse(window.localStorage.getItem('simulateurEmpruntslisteTableaux'));
+
+	if (i >= 0 && i < listEmp.length)
+	{
+		var emp = listEmp[i];
+		if (emp.empruntData.capital === undefined || emp.empruntData.duree === undefined || emp.empruntData.periodicite === undefined || emp.empruntData.taux === undefined)
+		{
+			throw new TypeError('Invalid object found instead of empruntData !');
+		}
+		emp.empruntData.capital=new Decimal(emp.empruntData.capital);
+		emp.empruntData.taux=new Decimal(emp.empruntData.taux);
+		emp.empruntData.periodicite=new Decimal(emp.empruntData.periodicite);
+		emp.empruntData.duree=new Decimal(emp.empruntData.duree);
+
+		computeSavedTable(emp);
+	}
+	else
+	{
+		throw new RangeError('Invalid index');
+	}
+}
+
+
 /*Storage for themes*/
 
 function saveTheme(themeSwatch)
@@ -221,7 +368,8 @@ function loadTheme()
 		}
 		$("#pageEmprunt").removeClass("ui-page-theme-a ui-page-theme-b ui-page-theme-c ui-page-theme-d ui-page-theme-e ui-page-theme-f ui-page-theme-g").addClass("ui-page-theme-"+themeSwatch);
 		$("#pagePresentation").removeClass("ui-page-theme-a ui-page-theme-b ui-page-theme-c ui-page-theme-d ui-page-theme-e ui-page-theme-f ui-page-theme-g").addClass("ui-page-theme-"+themeSwatch);
-		$("#pageMesEmprunts").removeClass("ui-page-theme-a ui-page-theme-b ui-page-theme-c ui-page-theme-d ui-page-theme-e ui-page-theme-f ui-page-theme-g").addClass("ui-page-theme-"+themeSwatch);
+		$("#pageMesCalculs").removeClass("ui-page-theme-a ui-page-theme-b ui-page-theme-c ui-page-theme-d ui-page-theme-e ui-page-theme-f ui-page-theme-g").addClass("ui-page-theme-"+themeSwatch);
+		$("#pageMesTableaux").removeClass("ui-page-theme-a ui-page-theme-b ui-page-theme-c ui-page-theme-d ui-page-theme-e ui-page-theme-f ui-page-theme-g").addClass("ui-page-theme-"+themeSwatch);
 		$("#pageTableaux").removeClass("ui-page-theme-a ui-page-theme-b ui-page-theme-c ui-page-theme-d ui-page-theme-e ui-page-theme-f ui-page-theme-g").addClass("ui-page-theme-"+themeSwatch);
 		$("#optionPanel").removeClass("ui-page-theme-a ui-page-theme-b ui-page-theme-c ui-page-theme-d ui-page-theme-e ui-page-theme-f ui-page-theme-g").addClass("ui-page-theme-"+themeSwatch);
 //		$(".ui-bar").removeClass("ui-bar-a ui-bar-b ui-bar-c ui-bar-d ui-bar-e ui-bar-f ui-bar-g").addClass("ui-bar-"+themeSwatch);
