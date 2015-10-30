@@ -82,7 +82,7 @@ function computeSavedTable(savedTable)
 
 	if(savedTable.modeCalculTableau==="echeanceConstante")
 	{
-		var tbl1=Emprunt.echeanceConstante.tableauAmortissement(savedTable.empruntData, 360,savedTable.dateDebut);
+		var tbl1=Emprunt.echeanceConstante.tableauAmortissement(savedTable.empruntData, 1000,savedTable.dateDebut);
 		output += "<h3 class='ui-bar ui-bar-a'>" + Emprunt.getEmpruntDescription(savedTable.empruntData.capital, savedTable.empruntData.taux, savedTable.empruntData.duree, savedTable.empruntData.periodicite) + ', profil &laquo;&nbsp;échéance constante&nbsp;&raquo;</h3>';
 		output+="<div class='ui-body'>"+tbl1.tableauHtml+"</div>";
 
@@ -90,7 +90,7 @@ function computeSavedTable(savedTable)
 
 	else if(savedTable.modeCalculTableau==="capitalConstant")
 	{
-		var tbl1=Emprunt.capitalConstant.tableauAmortissement(savedTable.empruntData, 360,savedTable.dateDebut);
+		var tbl1=Emprunt.capitalConstant.tableauAmortissement(savedTable.empruntData, 1000,savedTable.dateDebut);
 		output += "<h3 class='ui-bar ui-bar-b'>" + Emprunt.getEmpruntDescription(savedTable.empruntData.capital, savedTable.empruntData.taux, savedTable.empruntData.duree, savedTable.empruntData.periodicite) + ', profil &laquo;&nbsp;capital constant&nbsp;&raquo;</h3>';
 		output+="<div class='ui-body'>"+tbl1.tableauHtml+"</div>";
 	}
