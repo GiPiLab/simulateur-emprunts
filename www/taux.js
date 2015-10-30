@@ -37,6 +37,14 @@
 
 'use strict';
 
+/*
+ * Affichage des taux euribor et tecs
+ */
+
+
+/*
+ * Récupère les taux si besoin ou si forcé, et les affiche dans #divTaux
+ */
 function getTaux(forceRefresh)
 {
 	if(forceRefresh===undefined)
@@ -85,7 +93,9 @@ function getTaux(forceRefresh)
 		
 }
 
-
+/*
+ * Fabrique le tableau des taux à partir des données JSON
+ */
 function tauxToHtml(taux)
 {
 	var output="<table style='font-size:8pt' width='100%' class='tableTaux'><thead><tr><th></th><th>taux</th><th>prec</th><th>min</th><th>max</th></tr></thead><tbody>";

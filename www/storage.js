@@ -37,9 +37,20 @@
 
 'use strict';
 
+/* Toutes les fonctions utilisant le stockage local
+ * Clés utilisées :
+ *  - simulateurEmpruntslisteEmprunts contient les requêtes posées (onglet "mes calculs", qui n'ont pas forcément de résultat), sous forme d'un tableau d'Emprunt.empruntData
+ *  - simulateurEmpruntslisteTableaux contient les tableaux d'amortissement mis en favoris (onglet "mes tableaux"),
+ *  sous forme d'un tableau d'objets {empruntData, dateDebut, modeCalculTableau}
+ *  - themeswatch contient une lettre représentant le thème de couleur courant
+ *  - tauxRefreshDate contient la date de mise à jour des taux depuis le serveur
+ *  - lastTaux contient les dernières données JSON reçues du serveur
+ */
 
-/*Storage for emprunts*/
 
+/* Stockage des requêtes de calcul d'un emprunt */
+
+//Enregistre une requête ("mes calculs") et change vers la page des favoris
 function saveEmpruntToFavorite(emp)
 {
 	if (emp === undefined || emp === null)
@@ -195,7 +206,6 @@ function listEmprunts()
 
 
 /*Stockage des tableaux d'amortissement*/
-
 function saveTable(emp,dateDebut,modeCalculTableau)
 {
 	if (emp === undefined || dateDebut===undefined || modeCalculTableau===undefined)
@@ -340,8 +350,7 @@ function loadTable(i)
 }
 
 
-/*Storage for themes*/
-
+/* Stockage du thème de couleur */
 function saveTheme(themeSwatch)
 {
 	if(themeSwatch===undefined)
@@ -377,6 +386,12 @@ function loadTheme()
 	}	
 }
 
+
+
+/* Stockage des taux euribor, tec... */
+
+
+// Vérifie si le taux date de moins de 24 heures
 function mustTauxBeRefreshed()
 {
 	if(window.localStorage.tauxRefreshDate)
@@ -420,8 +435,4 @@ function loadLastTaux()
 	}	
 
 }
-
-
-
-
 

@@ -37,14 +37,18 @@
 
 'use strict';
 
-
+/*
+ * Module Emprunt contient les fonctions de calcul sur un emprunt. Ce n'est pas une classe.
+ */
 var Emprunt = {
 
-	//Prototype for an emprunt data structure
+	/*
+	 * Structure de données d'un emprunt, ou d'une requête de calcul
+	 */
 	empruntData: function()
 	{
 		var that = this;
-		that.reset = function()
+		var reset=function()
 		{
 			that.capital = null;
 			that.echeance = null;
@@ -53,15 +57,20 @@ var Emprunt = {
 			that.periodicite = null;
 			that.isValid = false;
 		};
-		that.reset();
+		reset();
 	},
 
-	/*MAXIMA*/
+	/*
+	 * Les valeurs maximum autorisées
+	 */
 	MAXDUREE:2000,
 	MAXTAUX:999999,
 	MAXECHEANCE:999999999999999,
 	MAXCAPITAL:999999999999999,
 
+	/*
+	 * Affiche une périodicité de remboursement en toute lettres
+	 */
 	periodiciteToString: function(periodicite)
 	{
 		if (periodicite === undefined || periodicite === null)
@@ -80,6 +89,9 @@ var Emprunt = {
 		}
 	},
 
+	/*
+	 * Affiche la durée d'un emprunt en tenant compte de la périodicité de remboursement et des pluriels
+	 */
 	formatDureeEmprunt: function(duree, periodicite)
 	{
 		if (duree === undefined || periodicite === undefined || duree === null || periodicite === null)
@@ -118,6 +130,9 @@ var Emprunt = {
 	},
 
 
+	/*
+	 * Affiche la description d'un emprunt générique, sans tenir compte de l'échéance
+	 */
 	getEmpruntDescription: function(capital, taux, duree, periodicite)
 	{
 		if (capital === undefined || taux === undefined || duree === undefined || periodicite === undefined)
@@ -135,6 +150,10 @@ var Emprunt = {
 		return 'Emprunt de '+ capital.toFormat(2) + '€ à '+ taux.times(100).toFormat(3) + '% pendant '+ Emprunt.formatDureeEmprunt(duree, periodicite);
 	},
 
+	/*
+	 * Affiche la description d'une requête de calcul sur un emprunt. Elle peut ne pas avoir donné lieu à un emprunt valide.
+	 * Utilisé pour afficher la liste des calculs favoris
+	 */
 	formatEmpruntQuery: function(capital, taux, duree, echeance, periodicite)
 	{
 		if (periodicite === undefined || capital === undefined || taux === undefined || duree === undefined
@@ -189,8 +208,12 @@ var Emprunt = {
 		}
 	},
 
-	//Static methods, will not update empruntData
-	echeanceConstante: {
+
+	/*
+	 * Méthodes statiques de calcul selon le modèle d'amortissement à échéance constante
+	 * Ne modifient pas les données de l'emprunt, utilisent seulement leurs paramètres
+	 */
+ 	 echeanceConstante: {
 
 		calculeEcheance: function(capital, tauxAnnuel, duree, periodicite)
 		{
@@ -224,6 +247,7 @@ var Emprunt = {
 			var tmp2 = ip.plus(Decimal.ONE).ln();
 			return tmp1.dividedBy(tmp2).round(Decimal.ROUND_UP);
 		},
+		
 		calculeCapital: function(tauxAnnuel, echeance, duree, periodicite)
 		{
 			if (duree === undefined || tauxAnnuel === undefined || echeance === undefined || periodicite === undefined)
@@ -240,6 +264,7 @@ var Emprunt = {
 			var denom = puissance.times(ip);
 			return num.dividedBy(denom);
 		},
+		
 		calculeTaux: function(capital, echeance, duree, periodicite)
 		{
 			if (capital === undefined || duree === undefined || echeance === undefined || periodicite === undefined)
@@ -315,6 +340,7 @@ var Emprunt = {
 			else return tauxAnnuel;
 		},
 
+		/* Calcul du tableau d'amortissement, en coupant à breakpoint lignes */
 		tableauAmortissement: function(emprunt, breakpoint,dateDebut)
 		{
 			if (emprunt === undefined || breakpoint === undefined || dateDebut === undefined)
@@ -344,8 +370,6 @@ var Emprunt = {
 			var sumKe = new Decimal(0);
 			var sumIpe = new Decimal(0);
 			var sumEch = new Decimal(0);
-
-//			var date = Date.today();
 
 			var date=new Date(dateDebut);
 
@@ -411,6 +435,10 @@ var Emprunt = {
 		}
 	},
 
+	/*
+	 * Méthodes statiques de calcul selon le modèle d'amortissement à échéance constante
+	 * Ne modifient pas les données de l'emprunt, utilisent seulement leurs paramètres
+	 */
 	capitalConstant: {
 		calculeEcheance: function(capital, tauxAnnuel, duree, periodicite)
 		{
@@ -460,6 +488,7 @@ var Emprunt = {
 			return i.times(periodicite);
 		},
 
+		/* Calcul du tableau d'amortissement, en coupant à breakpoint lignes */
 		tableauAmortissement: function(emprunt, breakpoint, dateDebut)
 		{
 			if (emprunt === undefined || breakpoint === undefined || dateDebut === undefined)

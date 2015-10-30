@@ -37,8 +37,17 @@
 
 'use strict';
 
+/*
+ * Fonctions liant emprunt.js et l'interface graphique
+ */
 
 
+
+/*
+ * Demande une date de début de l'emprunt, en utilisant le plugin natif si sur mobile,
+ * puis calcule et affiche les tableaux d'amortissement associés à currentEmpruntVariation1 et 2
+ * Affiche les tableaux dans #divTableaux et change la page courante
+ */
 function getDateAndComputeTables(currentEmpruntVariation1, currentEmpruntVariation2)
 {
 	if (currentEmpruntVariation1 === undefined || currentEmpruntVariation2 === undefined)
@@ -56,12 +65,16 @@ function getDateAndComputeTables(currentEmpruntVariation1, currentEmpruntVariati
 	}
 	else
 	{
-		console.log("using default date");
 		computeTables(currentEmpruntVariation1,currentEmpruntVariation2,new Date());
 	}
 }
 
-
+/*
+ * Calcule et affiche un tableau d'amortissement mémorisé
+ * savedTable contient : empruntData un emprunt, dateDebut une date et modeCalculTableau
+ * valant soit "echeanceConstante" soit "capitalConstant"
+ * Affiche le tableau dans #divTableaux et change la page courante
+ */
 function computeSavedTable(savedTable)
 {
 	if(savedTable===undefined)
@@ -112,8 +125,10 @@ function computeSavedTable(savedTable)
 
 }
 
-
-
+/* 
+ * Calcule et affiche les tableaux d'amortissement associés à currentEmpruntVariation1 et 2
+ * Affiche les tableaux dans #divTableaux et change la page courante
+ */
 function computeTables(currentEmpruntVariation1, currentEmpruntVariation2, dateDebut)
 {
 	if (currentEmpruntVariation1 === undefined || currentEmpruntVariation2 === undefined)
@@ -175,8 +190,14 @@ function computeTables(currentEmpruntVariation1, currentEmpruntVariation2, dateD
 		ActivityIndicator.hide();
 }
 
-//Computes the missing value depending of the filled fields, display and store the results
-//in empruntVar1, empruntVar2. empruntFormData will not contains the results, only the input values
+
+/* 
+ * Lit les données sur l'interface et calcule la grandeur manquante en modifiant
+ * empruntVar1, empruntVar2 (les emprunts avec le résultat calculé en échéance constante et capital contant)
+ * et empruntFormData (contient seulement les champs renseignés, pas le résultat, utilisé pour mémoriser les questions posées)
+ * 
+ * Affiche les résultats dans #resultatEcheanceConstante et #resultatCapitalConstant et déverouille les boutons
+ */
 function computeMissing(empruntVar1, empruntVar2, empruntFormData)
 {
 	if (empruntVar1 === undefined || empruntVar2 === undefined || empruntFormData === undefined)
@@ -219,8 +240,6 @@ function computeMissing(empruntVar1, empruntVar2, empruntFormData)
 		return;
 	}
 	
-
-
 	var periodicite = new Decimal($('#select-periodicite').val());
 	empruntVar1.periodicite = periodicite;
 	empruntVar2.periodicite = periodicite;
