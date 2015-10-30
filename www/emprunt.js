@@ -48,7 +48,7 @@ var Emprunt = {
 	empruntData: function()
 	{
 		var that = this;
-		var reset=function()
+		that.reset=function()
 		{
 			that.capital = null;
 			that.echeance = null;
@@ -57,7 +57,7 @@ var Emprunt = {
 			that.periodicite = null;
 			that.isValid = false;
 		};
-		reset();
+		that.reset();
 	},
 
 	/*
