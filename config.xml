@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='utf-8'?>
-<widget id="org.gipilab.simulateuremprunts" version="0.0.12" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
+<widget id="org.gipilab.simulateuremprunts" version="1.0.0" xmlns="http://www.w3.org/ns/widgets" xmlns:cdv="http://cordova.apache.org/ns/1.0">
     <name>Simulateur d\'emprunts</name>
     <description>
 	    Calculer le taux, la durée, l'échéance et le capital d'un emprunt.
@@ -7,7 +7,12 @@
     <author email="thibault@gipilab.org" href="http://gipilab.org">
         Thibault Mondary, Laboratoire de Recherche pour le Développement Local
     </author>
-    <icon src="www/bag.png" />
+    <icon src="www/icons/simulateuremprunt-36.png" density="ldpi" />
+    <icon src="www/icons/simulateuremprunt-48.png" density="mdpi" />
+    <icon src="www/icons/simulateuremprunt-72.png" density="hdpi" />
+    <icon src="www/icons/simulateuremprunt-96.png" density="xhdpi" />
+    <icon src="www/icons/simulateuremprunt-144.png" density="xxhdpi" />
+    <icon src="www/icons/simulateuremprunt-192.png" density="xxxhdpi" />
     <content src="index.html" />
     <access origin="http://gipilab.org/*" />
     <allow-navigation href="http://gipilab.org/*" />
