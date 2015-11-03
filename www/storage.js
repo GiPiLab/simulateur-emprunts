@@ -48,6 +48,25 @@
  */
 
 
+//Teste si c'est la première fois que le programme est lancé
+function isFirstRun()
+{
+	if(!window.localStorage)
+	{
+		return false;
+	}
+	if(window.localStorage.simulateurEmpruntsFirstRun)
+	{
+		return false;
+	}
+	else
+	{
+		window.localStorage.setItem("simulateurEmpruntsFirstRun","1");
+	}
+	return true;
+}
+
+
 /* Stockage des requêtes de calcul d'un emprunt */
 
 //Enregistre une requête ("mes calculs") et change vers la page des favoris
@@ -72,6 +91,11 @@ function saveEmpruntToFavorite(emp)
 	if (window.localStorage.simulateurEmpruntslisteEmprunts)
 	{
 		var listEmp = JSON.parse(window.localStorage.getItem('simulateurEmpruntslisteEmprunts'));
+		if(listEmp.length>60)
+		{
+			alert("Plus de place, supprimez un élément enregistré");
+			return;
+		}
 		listEmp.push(emp);
 		window.localStorage.setItem('simulateurEmpruntslisteEmprunts', JSON.stringify(listEmp));
 	}
@@ -229,6 +253,11 @@ function saveTable(emp,dateDebut,modeCalculTableau)
 	if (window.localStorage.simulateurEmpruntslisteTableaux)
 	{
 		var listTbl = JSON.parse(window.localStorage.getItem('simulateurEmpruntslisteTableaux'));
+		if(listTbl.length>60)
+		{
+			alert("Plus de place, supprimez un élément enregistré");
+			return;
+		}
 		listTbl.push(tblToSave);
 		window.localStorage.setItem('simulateurEmpruntslisteTableaux', JSON.stringify(listTbl));
 	}

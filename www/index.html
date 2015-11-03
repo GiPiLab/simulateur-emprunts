@@ -131,6 +131,11 @@ $(document).ready(function(){
 	$( "body>[data-role='panel']" ).panel();
 	getTaux();
 
+	if(isFirstRun())
+	{
+		$.mobile.pageContainer.pagecontainer('change', '#pagePresentation', {transition: 'none'});
+	}
+
 	loadTheme();
 	$(document).on("pagecreate",function(){
 		
@@ -141,7 +146,9 @@ $(document).ready(function(){
 			$(".ui-panel-wrapper").css("height", height + 1);
 		});
 	}
-		);
+	);
+	
+
 
 	$('#listeEmprunts').html(listEmprunts());
 	$('#listeTableaux').html(listTables());
@@ -221,6 +228,7 @@ $(document).ready(function(){
 	window.alert=function(msg){navigator.notification.alert(msg,null,"Attention");};
 });
 		</script>
+
 		<div data-role="page" id="pageEmprunt">
 
 			<div data-role="popup" id="popupGetDate" data-dismissible="false" class="ui-content">
@@ -389,7 +397,7 @@ $(document).ready(function(){
 				<img src="icons/simulateuremprunt-192.png" width="192" height="192" alt="logo" />
 				</div>
 				<p>
-				Le simulateur d'emprunt conçu par le Laboratoire de Recherche pour le Développement Local répond aux attentes de tout candidat à l'emprunt, qu'il s'agisse d'une Collectivité territoriale, dans le cadre de ses besoins de financement à moyen et long terme ou de l'un de ses gestionnaires, pour ses besoins particuliers.</p>
+				Le simulateur d'emprunt conçu par le Laboratoire de Recherche pour le Développement Local répond aux attentes de tout candidat à l'emprunt, qu'il s'agisse d'un particulier ou d'une collectivité territoriale, dans le cadre de leurs besoins de financement.</p>
 
 				<div data-role="collapsible">
 				<h2>Théorie</h2>
@@ -397,18 +405,17 @@ $(document).ready(function(){
 				En tant qu'objet, un emprunt peut être défini comme le cadre dans lequel s'inscrit indissociablement un ensemble de paramètres :
 
 				<ul>
-					<li>un besoin financier, exprimé par l'emprunteur et satisfait par un flux d'argent, la somme empruntée (ou capital), circulant, au moment voulu, entre un prêteur et l'emprunteur</li>
+					<li>un besoin financier, exprimé par l'emprunteur et satisfait par un flux d'argent, la somme empruntée (ou <b>capital</b>), circulant, au moment voulu, entre un prêteur et l'emprunteur</li>
 
-					<li>un taux, correspondant toujours à un pourcentage appliqué à la partie non remboursée de la somme empruntée pour former les intérêts. Les intérêts correspondent, dans ce schéma, à la valeur de transaction de l'argent, en sa qualité de matière première négociée, en contrepartie du besoin financier exprimé par l'emprunteur</li>
+					<li>un <b>taux annuel</b>, correspondant toujours à un pourcentage appliqué à la partie non remboursée de la somme empruntée pour former les intérêts. Les intérêts correspondent, dans ce schéma, à la valeur de transaction de l'argent, en sa qualité de matière première négociée, en contrepartie du besoin financier exprimé par l'emprunteur</li>
 
-					<li>une durée, au cours de laquelle le flux ayant satisfait le besoin d'origine est inversé, pour passer du sens prêteur -- emprunteur constaté lors de la satisfaction du besoin financier, au sens emprunteur -- prêteur</li>
+					<li>une <b>durée</b>, au cours de laquelle le flux ayant satisfait le besoin d'origine est inversé, pour passer du sens prêteur &ndash; emprunteur constaté lors de la satisfaction du besoin financier, au sens emprunteur &ndash; prêteur</li>
 
-					<li>une périodicité, ou structure temporelle de la durée, permettant de répartir et, corrélativement, de quantifier, le flux dans son sens emprunteur -- prêteur : les échéances ou termes</li>
+					<li>une <b>périodicité</b>, ou structure temporelle de la durée, permettant de répartir et, corrélativement, de quantifier, le flux dans son sens emprunteur &ndash; prêteur : les échéances ou termes</li>
 
-					<li>une ou plusieurs échéances, transcription la plus apparente de l'existence d'un emprunt, permettant de rembourser la somme empruntée (ou « amortissement du capital ») et d'en payer le prix convenu (les intérêts). Noter que l'amortissement du capital peut être intégralement dissocié du paiement des intérêts.</li>
+					<li>une ou plusieurs <b>échéances</b>, transcription la plus apparente de l'existence d'un emprunt, permettant de rembourser la somme empruntée (ou « amortissement du capital ») et d'en payer le prix convenu (les intérêts). Noter que l'amortissement du capital peut être intégralement dissocié du paiement des intérêts.</li>
 				</ul>
 
-				<p>Chaque paramètre ainsi défini peut connaître, à tout moment, une variation d'amplitude dont les limites sont imposées par le paramètre lui-même (un taux ne saurait être négatif…).</p>
 
 				<p>L'acte d'emprunt résulte du triptyque :</p>
 
@@ -427,9 +434,9 @@ $(document).ready(function(){
 
 				Le simulateur d'emprunts conçu par le Laboratoire de Recherche pour le Développement Local assiste le candidat emprunteur dès la phase de recherche.
 
-				<p>D'une utilisation simple et intuitive, il s'appuie sur le principe du « calcul de l'inconnue ». Le simulateur dispose également d'un « élargisseur de champ ». Cet outil offre à l'utilisateur diverses variantes, proches de la réponse attendue et susceptibles de compléter utilement sa réflexion.</p>
+				<p>D'une utilisation simple et intuitive, il s'appuie sur le principe du « calcul de l'inconnue » : l'utilisateur renseigne la périodicité ainsi que trois des quatre paramètres de l'emprunt (<i>taux annuel, échéance, capital, durée</i>), et le simulateur calcule le paramètre manquant. Diverses variantes originales susceptibles de compléter utilement la réflexion de l'emprunteur sont proposées.</p>
 
-				<p>Le simulateur permet :</p>
+				<p>Le simulateur permet notamment :</p>
 
 				<ul>
 					<li>d'éclairer l'emprunteur sur les conséquences induites par ses objectifs :
@@ -464,10 +471,10 @@ $(document).ready(function(){
 
 					<li>d'affiner les prévisions et de les recentrer sur telle limite en modulant les paramètres,</li>
 
-					<li>d'élargir le champ de réflexion du candidat emprunteur à d'autres types de profil, proches de ses préoccupations.</li>
+					<li>d'élargir le champ de réflexion du candidat emprunteur à d'autres types de profils d'amortissements, proches de ses préoccupations.</li>
 				</ul>
 
-				<p>Utiliser le simulateur allège le risque de choix inhérent à tout emprunt nouveau. La position de l'emprunteur lors des négociations avec le prêteur en est renforcée.</p>
+				<p>Utiliser le simulateur allège le risque de choix inhérent à tout emprunt nouveau. <b>La position de l'emprunteur lors des négociations avec le prêteur en est renforcée !</b></p>
 
 				</div>
 
@@ -550,7 +557,7 @@ $(document).ready(function(){
 					<h3>À propos</h3>
 					<p style="font-size:small;text-align:center">
 					<img src="icons/simulateuremprunt-48.png" width="48" height="48" alt="logo" /><br />
-					Simulateur d'emprunts version 1.0.0<br />
+					Simulateur d'emprunts version 1.0.1<br />
 					©2008&ndash;2015<br /><a href="#" onclick='window.open("http://gipilab.org","_system");'>Laboratoire de Recherche pour le Développement Local</a></p>
 					<p style='margin-top:2em'>
 					<a data-mini="true" class="ui-btn ui-btn-icon-left ui-icon-delete" href="#" data-rel="close">Fermer le panneau</a></p>
