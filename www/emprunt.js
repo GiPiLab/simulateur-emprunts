@@ -1,6 +1,6 @@
 /*
  * Copyright Laboratoire de Recherche pour le Développement Local,
- * Thibault Mondary, 2008-2015
+ * Thibault Mondary, 2008-2016
  * 
  * thibault@gipilab.org
  * 
@@ -371,6 +371,10 @@ var Emprunt = {
 			var sumIpe = new Decimal(0);
 			var sumEch = new Decimal(0);
 
+			var sumKeFromRounded = new Decimal(0);
+			var sumIpeFromRounded = new Decimal(0);
+			var sumEchFromRounded = new Decimal(0);
+
 			var date=new Date(dateDebut);
 
 			var per = emprunt.periodicite.toNumber();
@@ -418,12 +422,19 @@ var Emprunt = {
 				sumIpe = sumIpe.plus(ipe);
 				sumEch = sumEch.plus(echeance);
 
+				sumKeFromRounded = sumKeFromRounded.plus(ke.toDP(2));
+				sumIpeFromRounded = sumIpeFromRounded.plus(ipe.toDP(2));
+				sumEchFromRounded = sumEchFromRounded.plus(echeance.toDP(2));
+
 				ipe = crd.times(tauxPer);
 				ke = echeance.minus(ipe);
 				crd = crd.minus(ke);
 			}
+			output += "<tr><th style='text-align:left'>TOTAL (somme des arrondis)</th><td></td><td><b>" + sumEchFromRounded.toFormat(2)
+				+ "</b></td><td><b>" + sumKeFromRounded.toFormat(2) + "</b></td><td><b>" + sumIpeFromRounded.toFormat(2) +
+				'</b></td><td>&nbsp;</td></tr>';
 
-			output += "<tr><th style='text-align:left'>TOTAL</th><td></td><td><b>" + sumEch.toFormat(2)
+			output += "<tr><th style='text-align:left'>TOTAL (somme des valeurs exactes)</th><td></td><td><b>" + sumEch.toFormat(2)
 				+ "</b></td><td><b>" + sumKe.toFormat(2) + "</b></td><td><b>" + sumIpe.toFormat(2) +
 				'</b></td><td>&nbsp;</td></tr></tbody></table>';
 
@@ -517,6 +528,10 @@ var Emprunt = {
 			var sumKe = new Decimal(0);
 			var sumIpe = new Decimal(0);
 			var sumEch = new Decimal(0);
+			
+			var sumKeFromRounded = new Decimal(0);
+			var sumIpeFromRounded = new Decimal(0);
+			var sumEchFromRounded = new Decimal(0);
 
 			var date = new Date(dateDebut);
 
@@ -565,13 +580,20 @@ var Emprunt = {
 				sumKe = sumKe.plus(ke);
 				sumIpe = sumIpe.plus(ipe);
 				sumEch = sumEch.plus(echeance);
+				
+				sumKeFromRounded = sumKeFromRounded.plus(ke.toDP(2));
+				sumIpeFromRounded = sumIpeFromRounded.plus(ipe.toDP(2));
+				sumEchFromRounded = sumEchFromRounded.plus(echeance.toDP(2));
 
 				ipe = crd.times(tauxPer);
 				crd = crd.minus(ke);
 				echeance = ipe.plus(ke);
 			}
 
-			output += "<tr><th style='text-align:left'>TOTAL</th><td></td><td><b>" + sumEch.toFormat(2)
+			output += "<tr><th style='text-align:left'>TOTAL (somme des arrondis)</th><td></td><td><b>" + sumEchFromRounded.toFormat(2)
+				+ "</b></td><td><b>" + sumKeFromRounded.toFormat(2) + "</b></td><td><b>" + sumIpeFromRounded.toFormat(2) +
+				'</b></td><td>&nbsp;</td></tr>';
+			output += "<tr><th style='text-align:left'>TOTAL (somme des valeurs exactes)</th><td></td><td><b>" + sumEch.toFormat(2)
 				+ "</b></td><td><b>" + sumKe.toFormat(2) + "</b></td><td><b>" + sumIpe.toFormat(2) +
 				'</b></td><td>&nbsp;</td></tr></tbody></table>';
 			var resultObject={};

@@ -1,6 +1,6 @@
 /*
  * Copyright Laboratoire de Recherche pour le Développement Local,
- * Thibault Mondary, 2008-2015
+ * Thibault Mondary, 2008-2016
  * 
  * thibault@gipilab.org
  * 
