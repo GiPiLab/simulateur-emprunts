@@ -175,7 +175,7 @@ function computeTables(currentEmpruntVariation1, currentEmpruntVariation2, dateD
 		output += "<div><a href='#' class='ui-btn btnSaveTbl3'>Mémoriser</a>" + tbl3.tableauHtml + "</div><a href='#' class='ui-btn btnSaveTbl3'>Mémoriser</a></div>";
 		output += "<div data-role='collapsible' data-theme='a'><h3>" + Emprunt.getEmpruntDescription(currentEmpruntVariation2.capital, currentEmpruntVariation2.taux, currentEmpruntVariation2.duree, currentEmpruntVariation2.periodicite) + ', profil &laquo;&nbsp;échéance constante&nbsp;&raquo;<br>Coût total de l\'emprunt : '+tbl4.coutTotalEmprunt.toFormat(2)+'€</h3>';
 
-		output += "<div><a href='#' class='ui-btn btnSaveTbl4'>Mémoriser</a>" + tbl3.tableauHtml + "</div><a href='#' class='ui-btn btnSaveTbl4'>Mémoriser</a></div>";
+		output += "<div><a href='#' class='ui-btn btnSaveTbl4'>Mémoriser</a>" + tbl4.tableauHtml + "</div><a href='#' class='ui-btn btnSaveTbl4'>Mémoriser</a></div>";
 
 	}
 
