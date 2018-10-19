@@ -91,8 +91,8 @@ function computeSavedTable(savedTable)
 	var output = '';
 
 
-	if(typeof ActivityIndicator!=="undefined")
-		ActivityIndicator.show("Patienter...");
+	if(typeof ProgressIndicator!=="undefined")
+		ProgressIndicator.showSimpleWithLabel(true,"Patienter...");
 		
 
 	if(savedTable.modeCalculTableau==="echeanceConstante")
@@ -112,8 +112,8 @@ function computeSavedTable(savedTable)
 
 	else
 	{
-		if(typeof ActivityIndicator!=="undefined")	
-			ActivityIndicator.hide();
+		if(typeof ProgressIndicator!=="undefined")	
+			ProgressIndicator.hide();
 		throw new Error("Invalid modeCalculTableau");
 	}
 
@@ -122,8 +122,8 @@ function computeSavedTable(savedTable)
 	
 	$.mobile.pageContainer.pagecontainer('change', '#pageTableaux', {transition: 'none'});
 
-	if(typeof ActivityIndicator!=="undefined")	
-		ActivityIndicator.hide();
+	if(typeof ProgressIndicator!=="undefined")	
+		ProgressIndicator.hide();
 
 }
 
@@ -145,8 +145,8 @@ function computeTables(currentEmpruntVariation1, currentEmpruntVariation2, dateD
 	var output = '';
 
 
-	if(typeof ActivityIndicator!=="undefined")
-		ActivityIndicator.show("Patienter...");
+	if(typeof ProgressIndicator!=="undefined")
+		ProgressIndicator.showSimpleWithLabel(true,"Patienter...");
 
 		
 	if (currentEmpruntVariation1.isValid)
@@ -188,8 +188,8 @@ function computeTables(currentEmpruntVariation1, currentEmpruntVariation2, dateD
 	$('.btnSaveTbl4').click(function(){saveTable(currentEmpruntVariation2,dateDebut,"echeanceConstante");});
 
 	$.mobile.pageContainer.pagecontainer('change', '#pageTableaux', {transition: 'none'});
-	if(typeof ActivityIndicator!=="undefined")	
-		ActivityIndicator.hide();
+	if(typeof ProgressIndicator!=="undefined")	
+		ProgressIndicator.hide();
 }
 
 
@@ -392,8 +392,8 @@ function computeMissing(empruntVar1, empruntVar2, empruntFormData)
 			alert("L'echéance ne peut pas être supérieure au capital !");
 			return;
 		}
-		if(typeof ActivityIndicator!=="undefined")
-			ActivityIndicator.show("Patienter...");
+		if(typeof ProgressIndicator!=="undefined")
+		ProgressIndicator.showSimpleWithLabel(true,"Patienter...");
 
 		empruntVar1.capital = capital;
 		empruntVar1.duree = duree;
@@ -448,8 +448,8 @@ function computeMissing(empruntVar1, empruntVar2, empruntFormData)
 			console.log(tauxCapitalConstant.toString());
 		}
 		$('#resultatCapitalConstant').html(res);
-		if(typeof ActivityIndicator!=="undefined")
-			ActivityIndicator.hide();
+		if(typeof ProgressIndicator!=="undefined")
+			ProgressIndicator.hide();
 	}
 	//Calcul du capital
 	else if (setTaux && setDuree && setEcheance)
