@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+
+<!--
+/*
+ * Copyright Laboratoire de Recherche pour le Développement Local,
+ * Thibault Mondary et Gilbert Mondary, 2008-
+ * 
+ * labo@gipilab.org
+ * 
+ * Ce logiciel est un programme informatique servant à effectuer des simulations
+ * d'emprunts. 
+ * 
+ * Ce logiciel est régi par la licence CeCILL soumise au droit français et
+ * respectant les principes de diffusion des logiciels libres. Vous pouvez
+ * utiliser, modifier et/ou redistribuer ce programme sous les conditions
+ * de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
+ * sur le site "http://www.cecill.info".
+ * 
+ * En contrepartie de l'accessibilité au code source et des droits de copie,
+ * de modification et de redistribution accordés par cette licence, il n'est
+ * offert aux utilisateurs qu'une garantie limitée. Pour les mêmes raisons,
+ * seule une responsabilité restreinte pèse sur l'auteur du programme, le
+ * titulaire des droits patrimoniaux et les concédants successifs.
+ * 
+ * A cet égard l'attention de l'utilisateur est attirée sur les risques
+ * associés au chargement, à l'utilisation, à la modification et/ou au
+ * développement et à la reproduction du logiciel par l'utilisateur étant 
+ * donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
+ * manipuler et qui le réserve donc à des développeurs et des professionnels
+ * avertis possédant des connaissances informatiques approfondies. Les
+ * utilisateurs sont donc invités à charger et tester l'adéquation du
+ * logiciel à leurs besoins dans des conditions permettant d'assurer la
+ * sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
+ * à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
+ * 
+ * Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
+ * pris connaissance de la licence CeCILL, et que vous en avez accepté les
+ * termes.
+ */-->
+
+<html>
+	<head>
+		<meta http-equiv="Content-Security-Policy" content="default-src 'unsafe-inline' data: gap: https://ssl.gstatic.com 'unsafe-eval'; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; connect-src https://gipilab.org; media-src *; img-src 'self' data: content:;">
+
+		<meta name="format-detection" content="telephone=no">
+		<meta name="msapplication-tap-highlight" content="no">
+		<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, viewport-fit=cover">
+
+		<meta charset="utf-8">
+		<link rel="stylesheet" href="libs/theme_thib1/thib1.min.css">
+		<link rel="stylesheet" href="libs/theme_thib1/jquery.mobile.icons.min.css">
+		<link rel="stylesheet" href="libs/jquery.mobile.structure-1.4.5.min.css">
+		
+		
+		<style>
+label.error {
+	color: gray;
+	font-size: 10pt;
+	font-weight: bold;
+	margin-top: 0.0em;
+	width: 100%;
+}
+
+.ui-collapsible-heading-toggle {
+    white-space : normal;
+}
+
+.ui-listview > li p{
+	white-space:normal;
+}
+
+.ui-listview > li > a.ui-btn{
+	white-space:normal;
+}
+
+div.resultat{
+	text-align:center;
+	font-size:2em;
+	padding:1em;
+	font-weight:bold;
+}
+
+table.tableTaux td, table.tableTaux th{
+	text-align:right;
+	padding-top:0;
+	padding-bottom:0;
+}	
+		</style>
+
+		<script src="libs/jquery-2.1.4.min.js"></script>
+		<script src="libs/jquery.mobile-1.4.5.min.js"></script>
+		<script src="libs/jquery.validate.min.js"></script>
+		<script src="libs/jquery.validate-messages_FR_thib.min.js"></script>
+		<script src="libs/decimal.min.js"></script>
+		<script src="libs/date-fr-FR.min.js"></script>
+
+		<script src="emprunt.js"></script>
+		<script src="compute.js"></script>
+		<script src="storage.js"></script>
+		<script src="taux.js"></script>
+
+	</head>
+
+	<body>
+		<script type="text/javascript">
+
+"use strict";
+//Global config
+Decimal.config({
+		precision:40,
+		rounding:Decimal.ROUND_HALF_EVEN,
+		format:
+		{
+			decimalSeparator:',',
+			groupSeparator:' ',
+			groupSize:3
+		}
+	});
+
+//Sealed global variables
+var currentEmpruntVariation1=Object.seal(new Emprunt.empruntData());
+var currentEmpruntVariation2=Object.seal(new Emprunt.empruntData());
+var currentEmpruntFormData=Object.seal(new Emprunt.empruntData());
+
+
+$(document).ready(function(){
+
+	$.mobile.defaultPageTransition="none";
+	
+	$( "body>[data-role='panel']" ).panel();
+	getTaux();
+
+	if(isFirstRun())
+	{
+		$.mobile.pageContainer.pagecontainer('change', '#pagePresentation', {transition: 'none'});
+	}
+
+	loadTheme();
+	$(document).on("pagecreate",function(){
+		
+		loadTheme();
+		//Fix panel scrolling
+		$("[data-role=panel]").one("panelbeforeopen", function () {
+			var height = $.mobile.pageContainer.pagecontainer("getActivePage").outerHeight();
+			$(".ui-panel-wrapper").css("height", height + 1);
+		});
+	}
+	);
+	
+
+
+	$('#listeEmprunts').html(listEmprunts());
+	$('#listeTableaux').html(listTables());
+
+
+	//Gray buttons on change
+	$('#input-capital').on('change',function(){
+		$("#linkPageTableau").prop('disabled',true);
+		$("#saveEmprunt").prop('disabled',true);
+	});
+
+	$('#input-echeance').on('change',function(){
+		$("#linkPageTableau").prop('disabled',true);
+		$("#saveEmprunt").prop('disabled',true);
+	});
+
+	$('#input-taux').on('change',function(){
+		$("#linkPageTableau").prop('disabled',true);
+		$("#saveEmprunt").prop('disabled',true);
+	});
+
+	$('#input-duree').on('change',function(){
+		$("#linkPageTableau").prop('disabled',true);
+		$("#saveEmprunt").prop('disabled',true);
+	});
+	
+	$('#select-periodicite').on('change',function(){
+		$("#linkPageTableau").prop('disabled',true);
+		$("#saveEmprunt").prop('disabled',true);
+	});
+	
+	
+	
+	//Dynamic setting of html5 max values
+	$('#input-capital').attr({"max":Emprunt.MAXCAPITAL});
+	$('#input-echeance').attr({"max":Emprunt.MAXECHEANCE});
+	$('#input-taux').attr({"max":Emprunt.MAXTAUX});
+	$('#input-duree').attr({"max":Emprunt.MAXDUREE});
+
+	
+
+	$('#formEmprunt').validate({
+		rules: {
+			'input-capital': {
+				number:true,
+				min: 0.01,
+				max :Emprunt.MAXCAPITAL
+			},
+			'input-echeance':
+			{
+				number:true,
+				min: 0.01,
+				max :Emprunt.MAXECHEANCE
+			},
+			'input-taux':
+			{
+				number:true,
+				min:0,
+				max :Emprunt.MAXTAUX
+			},
+			'input-duree':
+			{
+				digits:true,
+				min:1,
+				max:Emprunt.MAXDUREE
+			}
+		},
+		errorPlacement: function( error, element) {
+			error.insertAfter( element.parent());
+		},
+		submitHandler:function(form){
+			computeMissing(currentEmpruntVariation1,currentEmpruntVariation2,currentEmpruntFormData);
+
+		}});
+}).on('deviceready',function(){
+	window.open=cordova.InAppBrowser.open;
+	window.alert=function(msg){navigator.notification.alert(msg,null,"Attention");};
+});
+		</script>
+
+		<div data-role="page" id="pageEmprunt">
+
+			<div data-role="popup" id="popupGetDate" data-dismissible="false" class="ui-content">
+				<label for="inputDateDebut">Date de la première échéance</label>
+				<input type="date" id="inputDateDebut" name="inputDateDebut">
+				<input type="button" value="Ok" onclick="var date=$('#inputDateDebut').val();if(date.length===0)date=new Date();computeTables(currentEmpruntVariation1,currentEmpruntVariation2,date);">
+			</div>
+
+			<div data-role="header" data-position="fixed">
+				<h1>Nouvel emprunt</h1>
+	<a href='#optionPanel' data-icon="bars" data-iconpos="notext" class="ui-btn-left"></a>
+			</div>
+
+			<div data-role="main" class="ui-content">
+
+				<form id="formEmprunt" action="javascript:false;">
+
+					<div class="ui-field-contain">
+						<label for="input-capital">Capital :</label>
+						<input class="empruntdata" type="number" name="input-capital" data-mini="true" data-clear-btn="true" id="input-capital" min="0.01" step="0.01">
+					</div>
+					<div class="ui-field-contain">
+						<label for="input-echeance">Echéance :</label>
+						<input class="empruntdata" type="number" name="input-echeance" data-mini="true" data-clear-btn="true" id="input-echeance" min="0.01" step="0.01">
+					</div>
+					<div class="ui-field-contain">
+						<label for="input-taux">Taux annuel (en %) :</label>
+						<input class="empruntdata" type="number" name="input-taux"  data-mini="true" data-clear-btn="true" id="input-taux" min="0" step="0.00001">
+					</div>
+
+
+					<div class="ui-field-contain">
+						<label for="input-duree">Durée (en périodes) :</label>
+						<input class="empruntdata" type="number" name="input-duree" data-mini="true" data-clear-btn="true" id="input-duree" min="1" step="1">
+					</div>
+
+					<div class="ui-field-contain">
+						<label for="select-periodicite">Périodicité :</label>
+						<select name="select-periodicite" id="select-periodicite" data-mini="true" >
+							<option value="12" selected="selected">mensuelle</option>
+							<option value="4">trimestrielle</option>
+							<option value="2">semestrielle</option>
+							<option value="1">annuelle</option>
+						</select>
+					</div>
+						<input type="submit" id="btncalculer" data-icon="check" data-iconpos="top" name="btncalculer" value="Calculer la grandeur manquante">
+				</form>
+				<div data-role="navbar">
+					<ul>
+						<li><button id="linkPageTableau" disabled="disabled" onclick="if(typeof datePicker!=='object'){$('#popupGetDate').popup('open');}else{getDateAndComputeTables(currentEmpruntVariation1,currentEmpruntVariation2);}" class="ui-btn" data-icon="grid">Tableau(x) d'amortissement</button></li>
+						<li><button id="saveEmprunt" disabled="disabled" onclick="saveEmpruntToFavorite(currentEmpruntFormData);" class="ui-btn" data-icon="star">Enregistrer le calcul</button></li>
+					</ul>
+				</div>
+
+				<div class="ui-grid-a ui-responsive">
+					<div class="ui-block-a">
+						<h3 class="ui-bar ui-bar-a" style='text-align:center'>Profil échéance constante</h3>
+						<div class="ui-body" id="resultatEcheanceConstante"><p style='text-align:center'><em>Résultats des calculs pour le profil d'amortissement à échéances constantes</em></p></div>
+					</div>
+					<div class="ui-block-b">
+						<h3 class="ui-bar ui-bar-b" style='text-align:center'>Profil capital constant</h3>
+						<div class="ui-body" id="resultatCapitalConstant"><p style='text-align:center'><em>Résultats des calculs pour le profil d'amortissement à capital constant</em></p></div>
+					</div>
+				</div>
+
+			</div>
+			<div data-role="footer" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li><a href="#pagePresentation" data-icon="info" >Présentation</a></li>
+						<li><a href="#pageEmprunt" data-icon="edit" class='ui-btn-active ui-state-persist'>Nouvel emprunt</a></li>
+						<li><a href="#pageMesCalculs" data-icon="star">Mes calculs</a></li>
+						<li><a href="#pageMesTableaux" data-icon="calendar" >Mes tableaux</a></li>
+					</ul>
+				</div>
+			</div>
+
+		</div>
+
+		<div data-role="page" id="pageTableaux">
+			<div data-role="header" data-position="fixed">
+				<h1>Tableau(x) d'amortissement</h1>
+
+	<a href='#optionPanel' data-icon="bars" data-iconpos="notext" class="ui-btn-left"></a>
+			</div>
+
+			<div data-role="main" class="ui-content">
+				<div id="divTableaux">
+				</div>
+			</div>
+			<div data-role="footer" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li><a href="#pagePresentation" data-icon="info" >Présentation</a></li>
+						<li><a href="#pageEmprunt" data-icon="edit">Nouvel emprunt</a></li>
+						<li><a href="#pageMesCalculs" data-icon="star">Mes calculs</a></li>
+						<li><a href="#pageMesTableaux" data-icon="calendar" >Mes tableaux</a></li>
+					</ul>
+				</div>
+			</div>
+			
+
+		</div>
+		
+		<div data-role="page" id="pageMesTableaux">
+			<div data-role="header" data-position="fixed">
+								<h1>Mes tableaux</h1>
+
+	<a href='#optionPanel' data-icon="bars" data-iconpos="notext" class="ui-btn-left"></a>
+				
+				</div>
+
+			<div data-role="main" class="ui-content">
+				<div data-role="content" id="listeTableaux">
+				</div>
+			</div>
+			<div data-role="footer" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li><a href="#pagePresentation" data-icon="info" >Présentation</a></li>
+						<li><a href="#pageEmprunt" data-icon="edit">Nouvel emprunt</a></li>
+						<li><a href="#pageMesCalculs" data-icon="star">Mes calculs</a></li>
+						<li><a href="#pageMesTableaux" data-icon="calendar" class='ui-btn-active ui-state-persist' >Mes tableaux</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		
+		
+		<div data-role="page" id="pageMesCalculs">
+			<div data-role="header" data-position="fixed">
+								<h1>Mes calculs</h1>
+
+	<a href='#optionPanel' data-icon="bars" data-iconpos="notext" class="ui-btn-left"></a>
+				
+				</div>
+
+			<div data-role="main" class="ui-content">
+				<div data-role="content" id="listeEmprunts">
+				</div>
+			</div>
+			<div data-role="footer" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li><a href="#pagePresentation" data-icon="info" >Présentation</a></li>
+						<li><a href="#pageEmprunt" data-icon="edit">Nouvel emprunt</a></li>
+						<li><a href="#pageMesCalculs" data-icon="star" class='ui-btn-active ui-state-persist'>Mes calculs</a></li>
+						<li><a href="#pageMesTableaux" data-icon="calendar" >Mes tableaux</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+		<div data-role="page" id="pagePresentation" >
+			<div data-role="header" data-position="fixed">
+				<h1>Présentation</h1>
+
+	<a href='#optionPanel' data-icon="bars" data-iconpos="notext" class="ui-btn-left"></a>
+
+			</div>
+
+			<div data-role="main" class="ui-content">
+
+				<div style="text-align:center;margin-left:auto;margin-right:auto;">
+				<img src="icons/simulateuremprunt-192.png" width="192" height="192" alt="logo" />
+				</div>
+				<p>
+				Le simulateur d'emprunt conçu par le Laboratoire de Recherche pour le Développement Local répond aux attentes de tout candidat à l'emprunt, qu'il s'agisse d'un particulier ou d'une collectivité territoriale, dans le cadre de leurs besoins de financement.</p>
+
+				<div data-role="collapsible">
+				<h2>Théorie</h2>
+
+				En tant qu'objet, un emprunt peut être défini comme le cadre dans lequel s'inscrit indissociablement un ensemble de paramètres :
+
+				<ul>
+					<li>un besoin financier, exprimé par l'emprunteur et satisfait par un flux d'argent, la somme empruntée (ou <b>capital</b>), circulant, au moment voulu, entre un prêteur et l'emprunteur</li>
+
+					<li>un <b>taux annuel</b>, correspondant toujours à un pourcentage appliqué à la partie non remboursée de la somme empruntée pour former les intérêts. Les intérêts correspondent, dans ce schéma, à la valeur de transaction de l'argent, en sa qualité de matière première négociée, en contrepartie du besoin financier exprimé par l'emprunteur</li>
+
+					<li>une <b>durée</b>, au cours de laquelle le flux ayant satisfait le besoin d'origine est inversé, pour passer du sens prêteur &ndash; emprunteur constaté lors de la satisfaction du besoin financier, au sens emprunteur &ndash; prêteur</li>
+
+					<li>une <b>périodicité</b>, ou structure temporelle de la durée, permettant de répartir et, corrélativement, de quantifier, le flux dans son sens emprunteur &ndash; prêteur : les échéances ou termes</li>
+
+					<li>une ou plusieurs <b>échéances</b>, transcription la plus apparente de l'existence d'un emprunt, permettant de rembourser la somme empruntée (ou « amortissement du capital ») et d'en payer le prix convenu (les intérêts). Noter que l'amortissement du capital peut être intégralement dissocié du paiement des intérêts.</li>
+				</ul>
+
+
+				<p>L'acte d'emprunt résulte du triptyque :</p>
+
+				<ol>
+					<li>émergence d'un besoin à satisfaire par un flux financier nouveau</li>
+
+					<li>recherche des réponses les mieux adaptées</li>
+
+					<li>formulation du choix</li>
+				</ol>
+				</div>
+
+				<div data-role="collapsible">
+
+				<h2>Pratique</h2>
+
+				Le simulateur d'emprunts conçu par le Laboratoire de Recherche pour le Développement Local assiste le candidat emprunteur dès la phase de recherche.
+
+				<p>D'une utilisation simple et intuitive, il s'appuie sur le principe du « calcul de l'inconnue » : l'utilisateur renseigne la périodicité ainsi que trois des quatre paramètres de l'emprunt (<i>taux annuel, échéance, capital, durée</i>), et le simulateur calcule le paramètre manquant. Diverses variantes originales susceptibles de compléter utilement la réflexion de l'emprunteur sont proposées.</p>
+
+				<p>Le simulateur permet notamment :</p>
+
+				<ul>
+					<li>d'éclairer l'emprunteur sur les conséquences induites par ses objectifs :
+
+						<ul>
+							<li>« j'ai besoin de telle somme »</li>
+
+							<li>« je ne veux pas m'endetter sur plus de tant d'années »</li>
+
+							<li>« je ne souhaite pas que mes remboursements périodiques dépassent telle somme »</li>
+
+							<li>…</li>
+						</ul>
+					</li>
+
+					<li>de simuler diverses situations pour élargir le champ des réponses possibles :
+
+						<ul>
+							<li>« si je rembourse telle somme pendant telle durée, combien puis-je emprunter ? »</li>
+
+							<li>« pour que je puisse emprunter cette somme, sur quelle durée dois-je m'endetter ? »</li>
+
+							<li>« quel sera le taux de mon emprunt si je limite les échéances à telle somme ? »</li>
+
+							<li>« à combien s'élèvent mes échéances si je réduis la durée de mon emprunt ? »</li>
+
+							<li>« quelle somme supplémentaire puis-je emprunter si j'allonge la durée de mon emprunt ? »</li>
+
+							<li>…</li>
+						</ul>
+					</li>
+
+					<li>d'affiner les prévisions et de les recentrer sur telle limite en modulant les paramètres,</li>
+
+					<li>d'élargir le champ de réflexion du candidat emprunteur à d'autres types de profils d'amortissements, proches de ses préoccupations.</li>
+				</ul>
+
+				<p>Utiliser le simulateur allège le risque de choix inhérent à tout emprunt nouveau. <b>La position de l'emprunteur lors des négociations avec le prêteur en est renforcée !</b></p>
+
+				</div>
+
+				<div data-role="collapsible">
+				<h2>Formulation mathématique</h2>
+				Les formules mathématiques et algorithmes utilisés dans ce simulateur sont accessibles ici : <a href="#" onclick='window.open("https://gipilab.org/fichiers/calcul_financier.pdf","_system","_location=yes");'>formulation mathématique du simulateur d'emprunts</a>.
+				</div>
+				<div data-role="collapsible">
+				<h2>&Agrave; propos...</h2>
+				<p>Copyright Laboratoire de Recherche pour le Développement Local,
+  Thibault Mondary et Gilbert Mondary, 2008-, labo@gipilab.org</p>
+				<p>
+  Ce logiciel est un programme informatique servant à effectuer des simulations
+  d'emprunts. </p>
+				<p>
+  Ce logiciel est régi par la licence CeCILL soumise au droit français et
+  respectant les principes de diffusion des logiciels libres. Vous pouvez
+  utiliser, modifier et/ou redistribuer ce programme sous les conditions
+  de la licence CeCILL telle que diffusée par le CEA, le CNRS et l'INRIA 
+  sur le site "http://www.cecill.info".</p>
+				<p>
+  En contrepartie de l'accessibilité au code source et des droits de copie,
+  de modification et de redistribution accordés par cette licence, il n'est
+  offert aux utilisateurs qu'une garantie limitée. Pour les mêmes raisons,
+  seule une responsabilité restreinte pèse sur l'auteur du programme, le
+  titulaire des droits patrimoniaux et les concédants successifs.
+				</p>
+				<p>
+  A cet égard l'attention de l'utilisateur est attirée sur les risques
+  associés au chargement, à l'utilisation, à la modification et/ou au
+  développement et à la reproduction du logiciel par l'utilisateur étant 
+  donné sa spécificité de logiciel libre, qui peut le rendre complexe à 
+  manipuler et qui le réserve donc à des développeurs et des professionnels
+  avertis possédant des connaissances informatiques approfondies. Les
+  utilisateurs sont donc invités à charger et tester l'adéquation du
+  logiciel à leurs besoins dans des conditions permettant d'assurer la
+  sécurité de leurs systèmes et ou de leurs données et, plus généralement, 
+  à l'utiliser et l'exploiter dans les mêmes conditions de sécurité. 
+				</p>
+				<p>
+  Le fait que vous puissiez accéder à cet en-tête signifie que vous avez 
+  pris connaissance de la licence CeCILL, et que vous en avez accepté les
+  termes.</p>
+				<p>Le code source de ce logiciel est accessible sur <a href="#" onclick="window.open('https://github.com/GiPiLab/simulateur-emprunts','_system');">GitHub</a></p>
+
+
+
+
+				</div>
+		</div>
+			<div data-role="footer" data-position="fixed">
+				<div data-role="navbar">
+					<ul>
+						<li><a href="#pagePresentation" data-icon="info" class='ui-btn-active ui-state-persist' >Présentation</a></li>
+						<li><a href="#pageEmprunt" data-icon="edit">Nouvel emprunt</a></li>
+						<li><a href="#pageMesCalculs" data-icon="star" >Mes calculs</a></li>
+						<li><a href="#pageMesTableaux" data-icon="calendar" >Mes tableaux</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+
+
+
+			<div  data-role="panel" data-position-fixed="true" id="optionPanel" class="ui-page-theme-a">
+					<h3>Derniers taux</h3>
+
+					<div id="divTaux" style="text-align:center"></div>
+					<div style="text-align:right"><a href="#" data-mini="true" class="ui-btn ui-btn-inline ui-icon-refresh ui-btn-icon-notext ui-corner-all" onclick="getTaux(true);">Maj</a></div>
+
+					<h3>Thème</h3>
+					<a href="#" class="ui-btn ui-btn-inline ui-btn-a" onclick="saveTheme('a');loadTheme();"></a>
+					<a href="#" class="ui-btn ui-btn-inline ui-btn-b" onclick="saveTheme('b');loadTheme();"></a>
+					<a href="#" class="ui-btn ui-btn-inline ui-btn-c" onclick="saveTheme('c');loadTheme();"></a>
+					<a href="#" class="ui-btn ui-btn-inline ui-btn-d" onclick="saveTheme('d');loadTheme();"></a>
+					<a href="#" class="ui-btn ui-btn-inline ui-btn-e" onclick="saveTheme('e');loadTheme();"></a>
+					<a href="#" class="ui-btn ui-btn-inline ui-btn-f" onclick="saveTheme('f');loadTheme();"></a>
+					<a href="#" class="ui-btn ui-btn-inline ui-btn-g" onclick="saveTheme('g');loadTheme();"></a>
+
+					<h3>À propos</h3>
+					<p style="font-size:small;text-align:center">
+					<img src="icons/simulateuremprunt-48.png" width="48" height="48" alt="logo" /><br />
+					Simulateur d'emprunts version 1.0.6<br />
+					©2008&ndash;20xx<br /><a href="#" onclick='window.open("https://gipilab.org","_system");'>Laboratoire de Recherche pour le Développement Local</a></p>
+					<p style='margin-top:2em'>
+					<a data-mini="true" class="ui-btn ui-btn-icon-left ui-icon-delete" href="#" data-rel="close">Fermer le panneau</a></p>
+
+			</div>
+	</body>
+</html>
