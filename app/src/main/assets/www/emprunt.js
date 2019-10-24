@@ -430,11 +430,11 @@ var Emprunt = {
 				ke = echeance.minus(ipe);
 				crd = crd.minus(ke);
 			}
-			output += "<tr><th style='text-align:left'>TOTAL (somme des arrondis)</th><td></td><td><b>" + sumEchFromRounded.toFormat(2)
+			output += "<tr><th style='text-align:left'>TOTAL<br>(somme des arrondis)</th><td></td><td><b>" + sumEchFromRounded.toFormat(2)
 				+ "</b></td><td><b>" + sumKeFromRounded.toFormat(2) + "</b></td><td><b>" + sumIpeFromRounded.toFormat(2) +
 				'</b></td><td>&nbsp;</td></tr>';
 
-			output += "<tr><th style='text-align:left'>TOTAL (somme des valeurs exactes)</th><td></td><td><b>" + sumEch.toFormat(2)
+			output += "<tr><th style='text-align:left'>TOTAL<br>(somme des valeurs exactes)</th><td></td><td><b>" + sumEch.toFormat(2)
 				+ "</b></td><td><b>" + sumKe.toFormat(2) + "</b></td><td><b>" + sumIpe.toFormat(2) +
 				'</b></td><td>&nbsp;</td></tr></tbody></table>';
 
@@ -590,10 +590,10 @@ var Emprunt = {
 				echeance = ipe.plus(ke);
 			}
 
-			output += "<tr><th style='text-align:left'>TOTAL (somme des arrondis)</th><td></td><td><b>" + sumEchFromRounded.toFormat(2)
+			output += "<tr><th colspan=2 style='text-align:left'>TOTAL (somme des arrondis)</th><td><b>" + sumEchFromRounded.toFormat(2)
 				+ "</b></td><td><b>" + sumKeFromRounded.toFormat(2) + "</b></td><td><b>" + sumIpeFromRounded.toFormat(2) +
 				'</b></td><td>&nbsp;</td></tr>';
-			output += "<tr><th style='text-align:left'>TOTAL (somme des valeurs exactes)</th><td></td><td><b>" + sumEch.toFormat(2)
+			output += "<tr><th colspan=2 style='text-align:left'>TOTAL (somme des valeurs exactes)</th><td><b>" + sumEch.toFormat(2)
 				+ "</b></td><td><b>" + sumKe.toFormat(2) + "</b></td><td><b>" + sumIpe.toFormat(2) +
 				'</b></td><td>&nbsp;</td></tr></tbody></table>';
 			var resultObject={};

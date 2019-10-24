@@ -199,12 +199,14 @@ function computeTables(currentEmpruntVariation1, currentEmpruntVariation2, dateD
  * et empruntFormData (contient seulement les champs renseignés, pas le résultat, utilisé pour mémoriser les questions posées)
  * 
  * Affiche les résultats dans #resultatEcheanceConstante et #resultatCapitalConstant et déverouille les boutons
+ * Retourne faux si les elements saisis sont incorrects
  */
 function computeMissing(empruntVar1, empruntVar2, empruntFormData)
 {
 	if (empruntVar1 === undefined || empruntVar2 === undefined || empruntFormData === undefined)
 	{
 		throw new Error('Missing parameters');
+		return false;
 	}
 	var nbInputs = 0;
 	var setCapital = false, setEcheance = false, setTaux = false, setDuree = false;
@@ -239,7 +241,7 @@ function computeMissing(empruntVar1, empruntVar2, empruntFormData)
 	if (nbInputs != 3)
 	{
 		alert('Remplissez exactement trois champs puis appuyez sur le bouton pour calculer la grandeur manquante');
-		return;
+		return false;
 	}
 	
 	var periodicite = new Decimal($('#select-periodicite').val());
@@ -309,7 +311,7 @@ function computeMissing(empruntVar1, empruntVar2, empruntFormData)
 		if (echeance.greaterThan(capital))
 		{
 			alert("L'echéance ne peut pas être supérieure au capital !");
-			return;
+			return false;
 		}
 		empruntVar1.capital = capital;
 		empruntVar1.taux = taux;
@@ -390,7 +392,7 @@ function computeMissing(empruntVar1, empruntVar2, empruntFormData)
 		if (echeance.greaterThan(capital))
 		{
 			alert("L'echéance ne peut pas être supérieure au capital !");
-			return;
+			return false;
 		}
 		if(typeof ProgressIndicator!=="undefined")
 		ProgressIndicator.showSimpleWithLabel(true,"Patienter...");
@@ -516,6 +518,8 @@ function computeMissing(empruntVar1, empruntVar2, empruntFormData)
 	else
 	{
 		throw new Error("Erreur de determination de l'inconnue");
+		return false;
 	}
+	return true;
 }
 
