@@ -7,8 +7,8 @@ android {
         applicationId "org.gipilab.simulateuremprunts"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 100060
-        versionName "1.0.6"
+        versionCode 100070
+        versionName "1.0.7"
     }
     buildTypes {
         release {
