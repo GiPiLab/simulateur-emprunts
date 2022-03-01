@@ -140,34 +140,34 @@ $tecs['date']=$date_tec;
 
 
 
-$requete="select round(min(eonia),3) as mineo,round(max(eonia),3) as maxeo from eonia where year(date)<='$annee' limit 1";
+$requete="select round(min(ester),3) as mineo,round(max(ester),3) as maxeo from ester where year(date)<='$annee' limit 1";
 $result=mysqli_query($connect,$requete)or maildie(mysqli_error());
 while($eo=mysqli_fetch_assoc($result))
 {
-	$eonia['min']=$eo['mineo'];
-	$eonia['max']=$eo['maxeo'];
+	$ester['min']=$eo['mineo'];
+	$ester['max']=$eo['maxeo'];
 }
 
-$requete="select * from eonia where year(date)='$annee' order by date desc limit 2";
+$requete="select * from ester where year(date)='$annee' order by date desc limit 2";
 $result=mysqli_query($connect,$requete)or maildie(mysqli_error());
-$date_eonia=0;
+$date_ester=0;
 $i=0;
 while($eo=mysqli_fetch_assoc($result))
 {
 	if($i==0)
 	{
-		$eonia['current']=$eo['eonia'];
+		$ester['current']=$eo['ester'];
 	}
 	else
 	{
-		$eonia['prev']=$eo['eonia'];
+		$ester['prev']=$eo['ester'];
 	}
 	list($annee,$mois,$jour)=explode('-',$eo['date']);
-	if($date_eonia==0)$date_eonia="$jour/$mois/$annee";
+	if($date_ester==0)$date_ester="$jour/$mois/$annee";
 	$i++;
 }
-$eonia['date']=$date_eonia;
-$data['eonia']=$eonia;
+$ester['date']=$date_ester;
+$data['ester']=$ester;
 $data['euribors']=$euribors;
 $data['tecs']=$tecs;
 mysqli_close($connect);

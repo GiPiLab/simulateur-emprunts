@@ -40,13 +40,13 @@ package org.gipilab.simulateurdemprunts;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
 import android.webkit.JsResult;
 import android.webkit.WebChromeClient;
 import android.webkit.WebResourceRequest;
@@ -55,8 +55,6 @@ import android.webkit.WebViewClient;
 import android.widget.Toast;
 
 public class MainActivity extends AppCompatActivity {
-
-    private WebView myWebView;
 
     private static final int TIME_INTERVAL = 2000;
     private long mBackPressed;
@@ -74,12 +72,13 @@ public class MainActivity extends AppCompatActivity {
         mBackPressed = System.currentTimeMillis();
     }
 
+    @SuppressLint("SetJavaScriptEnabled")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        myWebView = (WebView) findViewById(R.id.webView);
+        WebView myWebView = findViewById(R.id.webView);
 
         myWebView.getSettings().setJavaScriptEnabled(true);
         myWebView.getSettings().setUseWideViewPort(true);
@@ -96,7 +95,6 @@ public class MainActivity extends AppCompatActivity {
 
     private class CustomWebViewClient extends WebViewClient {
 
-        @SuppressWarnings("deprecation")
         @Override
         public boolean shouldOverrideUrlLoading(WebView view, String url) {
             final Uri uri = Uri.parse(url);
@@ -119,14 +117,14 @@ public class MainActivity extends AppCompatActivity {
                 }
             }catch(Exception e)
             {
-                return true;
+                return false;
             }
             return true;
 
         }
     }
 
-    private class CustomChromeclient extends WebChromeClient {
+    private static class CustomChromeclient extends WebChromeClient {
         @Override
         public boolean onJsAlert(WebView view, String url, String message, final JsResult result) {
             AlertDialog dialog = new AlertDialog.Builder(view.getContext()).

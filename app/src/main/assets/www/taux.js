@@ -100,12 +100,12 @@ function tauxToHtml(taux)
 {
 	var output="<table style='font-size:8pt' width='100%' class='tableTaux'><thead><tr><th></th><th>taux</th><th>prec</th><th>min</th><th>max</th></tr></thead><tbody>";
 
-	output+="<tr><th style='text-align:center;padding-top:5px' colspan='5'>Eonia ("+taux.eonia.date+")</th></tr>";
-	output+="<tr><td style='text-align:left'>eonia</td><td>"+taux.eonia.current
-		+"</td><td>"+taux.eonia.prev+"</td><td>"+taux.eonia.min+"</td><td>"+
-		taux.eonia.max+"</td></tr>";
+	output+="<tr><th style='text-align:center;padding-top:5px' colspan='5'>Taux interbancaire ("+taux.ester.date+")</th></tr>";
+	output+="<tr><td style='text-align:left'>ester</td><td>"+taux.ester.current
+		+"</td><td>"+taux.ester.prev+"</td><td>"+taux.ester.min+"</td><td>"+
+		taux.ester.max+"</td></tr>";
 
-	output+="<tr><th style='text-align:center;padding-top:5px' colspan='5'>Euribor ("+taux.euribors.date+")</th></tr>";
+	output+="<tr><th style='text-align:center;padding-top:5px' colspan='5'>Taux variables ("+taux.euribors.date+")</th></tr>";
 	output+="<tr><td style='text-align:left'>eur-1m</td><td>"+taux.euribors.unMois.current
 		+"</td><td>"+taux.euribors.unMois.prev+"</td><td>"+taux.euribors.unMois.min+"</td><td>"+
 		taux.euribors.unMois.max+"</td></tr>";
@@ -119,7 +119,7 @@ function tauxToHtml(taux)
 		+"</td><td>"+taux.euribors.douzeMois.prev+"</td><td>"+taux.euribors.douzeMois.min+"</td><td>"+
 		taux.euribors.douzeMois.max+"</td></tr>";
 
-	output+="<tr><th style='text-align:center;padding-top:5px' colspan='5'>TEC ("+taux.tecs.date+")</th></tr>";
+	output+="<tr><th style='text-align:center;padding-top:5px' colspan='5'>Taux fixes ("+taux.tecs.date+")</th></tr>";
 	output+="<tr><td style='text-align:left'>TEC10</td><td>"+taux.tecs.tec10.current
 		+"</td><td>"+taux.tecs.tec10.prev+"</td><td>"+taux.tecs.tec10.min+"</td><td>"+
 		taux.tecs.tec10.max+"</td></tr>";
